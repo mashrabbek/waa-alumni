@@ -8,11 +8,11 @@ import java.util.List;
 public interface StudentService {
     List<Student> findAll();
 
-    Student findByID(int id);
+    Student findById(int id);
 
     Student save(Student student);
 
     void delete(int id);
 
-    Student update(StudentDto student, int id) throws Exception;
+    StudentDto update(StudentDto studentDto, int id) throws Exception;
 }

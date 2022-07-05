@@ -1,5 +1,6 @@
 package edu.miu.backend.controller;
 
+import edu.miu.backend.dto.StudentDto;
 import edu.miu.backend.entity.Student;
 import edu.miu.backend.service.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class StudentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Student> getById(@PathVariable int id){
-        return ResponseEntity.ok().body(studentService.findByID(id));
+        return ResponseEntity.ok().body(studentService.findById(id));
     }
 
     @PostMapping()
@@ -31,14 +32,13 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@RequestBody Student student, @PathVariable int id){
-        return null; //ResponseEntity.ok().body(studentService.update(student, id));
+    public ResponseEntity<StudentDto> updateStudent(@RequestBody StudentDto studentDto, @PathVariable int id) throws Exception {
+        return  ResponseEntity.ok().body(studentService.update(studentDto, id));
     }
 
     @DeleteMapping("/{id}")
     public void deleteStudent(@PathVariable int id){
         studentService.delete(id);
-
     }
 
 }

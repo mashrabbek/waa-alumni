@@ -1,5 +1,6 @@
 package edu.miu.backend.controller;
 
+import edu.miu.backend.dto.FacultyDto;
 import edu.miu.backend.entity.Faculty;
 import edu.miu.backend.repo.FacultyRepo;
 import edu.miu.backend.service.FacultyService;
@@ -29,6 +30,16 @@ public class FacultyController {
     @PostMapping("")
     public ResponseEntity<Faculty> addFaculty(@RequestBody Faculty faculty){
         return ResponseEntity.ok().body(facultyService.save(faculty));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<FacultyDto> updateFaculty(@RequestBody FacultyDto facultyDto, @PathVariable int id) throws Exception {
+        return  ResponseEntity.ok().body(facultyService.update(facultyDto, id));
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteFaculty(@PathVariable int id){
+        facultyService.delete(id);
     }
 
 }

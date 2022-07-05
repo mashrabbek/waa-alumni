@@ -15,7 +15,7 @@ import java.util.List;
 public abstract class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     @Column(nullable = false)
     private String email;

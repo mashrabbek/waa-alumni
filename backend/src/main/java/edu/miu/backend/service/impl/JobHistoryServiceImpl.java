@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JobHistoryServiceImpl implements JobHistoryService {
 
-    private JobHistoryRepo jobHistoryRepo;
+    private final JobHistoryRepo jobHistoryRepo;
 
 
     @Override
