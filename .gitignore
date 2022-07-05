@@ -1,6 +1,6 @@
 #application config
 application.yml
-
+.idea
 # Compiled class file
 *.class
 
