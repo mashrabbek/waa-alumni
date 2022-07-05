@@ -27,9 +27,8 @@ public abstract class User {
     private String password;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastLoggedIn;
-    @Value("true")
-    private Boolean active;
-    @OneToOne
+    private Boolean active = true;
+    @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
     @OneToMany(mappedBy = "creator")

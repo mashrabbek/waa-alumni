@@ -12,7 +12,7 @@ public interface FacultyService {
 
     Faculty findById(int id);
 
-    Faculty save(Faculty faculty);
+    FacultyDto save(FacultyDto facultyDto) throws Exception;
 
     FacultyDto update(FacultyDto facultyDto, int id)  throws Exception;
 

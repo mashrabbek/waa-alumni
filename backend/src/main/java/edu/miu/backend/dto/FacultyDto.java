@@ -11,6 +11,7 @@ public class FacultyDto {
     private String email;
     private String lastName;
     private String firstName;
+    private String password;
     private AddressDto address;
     private Integer departmentId;
 }

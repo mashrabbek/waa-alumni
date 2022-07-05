@@ -34,8 +34,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student save(Student student) {
-        return studentRepo.save(student);
+    public StudentDto save(StudentDto studentDto) {
+        Student student = modelMapper.map(studentDto, Student.class);
+        Department department = departmentRepo.findById(studentDto.getMajorId()).get();
+        student.setMajor(department);
+        return modelMapper.map(studentRepo.save(student), StudentDto.class);
     }
 
     @Override

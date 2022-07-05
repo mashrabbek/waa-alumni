@@ -10,7 +10,7 @@ public interface StudentService {
 
     Student findById(int id);
 
-    Student save(Student student);
+    StudentDto save(StudentDto studentDto);
 
     void delete(int id);
 

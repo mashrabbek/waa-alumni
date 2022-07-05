@@ -10,7 +10,6 @@ public interface DepartmentService {
 
     Department findById(int id);
 
-
     Department save(Department student);
 
     void delete(int id);

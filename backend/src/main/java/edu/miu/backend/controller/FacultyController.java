@@ -28,8 +28,8 @@ public class FacultyController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Faculty> addFaculty(@RequestBody Faculty faculty){
-        return ResponseEntity.ok().body(facultyService.save(faculty));
+    public ResponseEntity<FacultyDto> addFaculty(@RequestBody FacultyDto facultyDto) throws Exception {
+        return ResponseEntity.ok().body(facultyService.save(facultyDto));
     }
 
     @PutMapping("/{id}")

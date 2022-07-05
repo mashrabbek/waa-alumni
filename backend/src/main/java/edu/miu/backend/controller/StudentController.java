@@ -27,8 +27,8 @@ public class StudentController {
     }
 
     @PostMapping()
-    public ResponseEntity<Student> addStudent(@RequestBody Student student){
-        return ResponseEntity.ok().body(studentService.save(student));
+    public ResponseEntity<StudentDto> addStudent(@RequestBody StudentDto studentDto){
+        return ResponseEntity.ok().body(studentService.save(studentDto));
     }
 
     @PutMapping("/{id}")

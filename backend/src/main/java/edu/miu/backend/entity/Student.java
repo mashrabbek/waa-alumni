@@ -2,17 +2,14 @@ package edu.miu.backend.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Data
 public class Student extends User {
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Department major;
     private Float gpa;
 

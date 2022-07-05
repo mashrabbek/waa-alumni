@@ -33,23 +33,24 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public Faculty save(Faculty faculty) {
-        return facultyRepo.save(faculty);
+    public FacultyDto save(FacultyDto facultyDto) throws Exception {
+        Faculty faculty = modelMapper.map(facultyDto, Faculty.class);
+        Department department = departmentRepo.findById(facultyDto.getDepartmentId())
+                .orElseThrow(()-> new Exception("Faculty not found"));
+        faculty.setDepartment(department);
+        return modelMapper.map(facultyRepo.save(faculty), FacultyDto.class);
     }
 
     @Override
     @Transactional
     public FacultyDto update(FacultyDto facultyDto, int id) throws Exception {
-        Faculty faculty = facultyRepo.findById(id).orElseGet(null);
-        Faculty stMapped = modelMapper.map(facultyDto, Faculty.class);
-        if(faculty == null){
-            throw new Exception("Faculty not found");
-        }
-        Department depRef = departmentRepo.findById(facultyDto.getDepartmentId()).get();
 
-        if(depRef == null){
-            throw new Exception("Department not found!");
-        }
+        Faculty stMapped = modelMapper.map(facultyDto, Faculty.class);
+        Department depRef = departmentRepo.findById(facultyDto.getDepartmentId())
+                .orElseThrow(()->new Exception("Department not found!"));
+
+        Faculty faculty = facultyRepo.findById(id)
+                .orElseThrow(()-> new Exception("Faculty not found!"));
         faculty.setEmail(stMapped.getEmail());
         faculty.setFirstName(stMapped.getFirstName());
         faculty.setLastName(stMapped.getLastName());
