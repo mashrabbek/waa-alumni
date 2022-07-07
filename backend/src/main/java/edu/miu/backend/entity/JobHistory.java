@@ -1,5 +1,6 @@
 package edu.miu.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 import lombok.Data;
 import org.springframework.lang.Nullable;
@@ -26,6 +27,7 @@ public class JobHistory {
     List<Tag> tags;
 
     @ManyToOne
+    @JsonManagedReference
     private Student student;
 
 }

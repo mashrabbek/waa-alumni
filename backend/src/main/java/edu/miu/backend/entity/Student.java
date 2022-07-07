@@ -1,5 +1,6 @@
 package edu.miu.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ public class Student extends User {
     private Float gpa;
 
     @OneToMany(mappedBy = "student")
+    @JsonBackReference
     List<JobHistory> jobHistories;
 
 }
