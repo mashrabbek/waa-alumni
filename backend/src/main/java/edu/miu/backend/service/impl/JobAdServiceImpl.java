@@ -31,19 +31,11 @@ import java.util.stream.Collectors;
 @Transactional
 public class JobAdServiceImpl implements JobAdService {
 
-    private JobAdRepo jobAdRepo;
-    private ModelMapper modelMapper;
-    private StudentRepo studentRepo;
-    private TagRepo tagRepo;
-    private AmazonS3 amazonS3Client;
-    @Autowired
-    public JobAdServiceImpl(JobAdRepo jobAdRepo, ModelMapper modelMapper, StudentRepo studentRepo, TagRepo tagRepo, AmazonS3 amazonS3Client) {
-        this.jobAdRepo = jobAdRepo;
-        this.modelMapper = modelMapper;
-        this.studentRepo = studentRepo;
-        this.tagRepo = tagRepo;
-        this.amazonS3Client = amazonS3Client;
-    }
+    private final JobAdRepo jobAdRepo;
+    private final ModelMapper modelMapper;
+    private final StudentRepo studentRepo;
+    private final TagRepo tagRepo;
+    private final AmazonS3 amazonS3Client;
 
     @Override
     public List<JobAd> findAll() {
@@ -70,7 +62,19 @@ public class JobAdServiceImpl implements JobAdService {
         jobAd.setTags(tagList);
 
         List<String> fileUrlList = Arrays
-                .stream(jobAdDto.getFiles()).map(uploadFilesToAWSAndGetUrls)
+                .stream(jobAdDto.getFiles()).map((multipartFile) -> {
+
+                    ObjectMetadata metadata = new ObjectMetadata();
+                    metadata.setContentLength(multipartFile.getSize());
+                    String keyName = generateFileName(multipartFile);
+//        try {
+//            var result = amazonS3Client
+//                    .putObject(BucketName.ALUMNI.getBucketName(), keyName, multipartFile.getInputStream(), metadata);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+                    return Config.PUBLIC_AWS_URL + keyName;
+                })
                 .collect(Collectors.toList());
 
         jobAd.setFiles(fileUrlList);
@@ -103,19 +107,19 @@ public class JobAdServiceImpl implements JobAdService {
 
         return jobAdDto;
     }
-    private Function<MultipartFile, String> uploadFilesToAWSAndGetUrls = (multipartFile) -> {
-
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(multipartFile.getSize());
-        String keyName = generateFileName(multipartFile);
-//        try {
-//            var result = amazonS3Client
-//                    .putObject(BucketName.ALUMNI.getBucketName(), keyName, multipartFile.getInputStream(), metadata);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-        return Config.PUBLIC_AWS_URL + keyName;
-    };
+//    private Function<MultipartFile, String> uploadFilesToAWSAndGetUrls = (multipartFile) -> {
+//
+//        ObjectMetadata metadata = new ObjectMetadata();
+//        metadata.setContentLength(multipartFile.getSize());
+//        String keyName = generateFileName(multipartFile);
+////        try {
+////            var result = amazonS3Client
+////                    .putObject(BucketName.ALUMNI.getBucketName(), keyName, multipartFile.getInputStream(), metadata);
+////        } catch (IOException e) {
+////            throw new RuntimeException(e);
+////        }
+//        return Config.PUBLIC_AWS_URL + keyName;
+//    };
 
     private String generateFileName(MultipartFile multiPart) {
         return new Date().getTime() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
