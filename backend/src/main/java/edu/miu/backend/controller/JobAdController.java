@@ -17,7 +17,6 @@ import java.util.List;
 public class JobAdController {
     private final JobAdService jobAdService;
 
-
     @GetMapping("")
     public ResponseEntity<List<JobAd>> getAll(){
         return ResponseEntity.ok().body(jobAdService.findAll());
@@ -28,20 +27,10 @@ public class JobAdController {
         return ResponseEntity.ok().body(jobAdService.findById(id));
     }
 
-//    @PostMapping(path = "", consumes = "multipart/mixed",
-//            produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<JobAdDto> addJobAd(@RequestPart("description") String description, @RequestPart("benefits") String benefits,
-//    @RequestPart("creatorId") Integer creatorId, @RequestPart("tagIds")  List<Integer> tagIds,
-//    @RequestPart(name = "files", required = false) MultipartFile[] files) throws IOException {
-//
-//        JobAdDto jobAdDto = new JobAdDto(null,description,benefits,creatorId,tagIds, files);
-//        return ResponseEntity.ok().body(jobAdService.save(jobAdDto));
-//    }
     @PostMapping(path = "")
     public ResponseEntity<JobAdResponseDto> addJobAd(@ModelAttribute JobAdDto jobAdDto) throws IOException {
         return ResponseEntity.ok().body(jobAdService.save(jobAdDto));
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<JobAdDto> updateJobAd(@RequestBody JobAdDto jobAdDto, @PathVariable int id) throws Exception {
