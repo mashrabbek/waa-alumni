@@ -8,10 +8,10 @@ import java.util.List;
 public interface JobAdService {
     List<JobAd> findAll();
 
-    JobAd findById(int id);
+    JobAdDto findById(int id);
 
 
-    JobAd save(JobAd student);
+    JobAdDto save(JobAdDto jobAdDto);
 
     void delete(int id);
 

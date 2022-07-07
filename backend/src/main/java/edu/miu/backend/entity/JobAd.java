@@ -16,7 +16,7 @@ public class JobAd {
     private String benefits;
     @ManyToOne
     private User creator;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Tag> tags;
 
     @ElementCollection

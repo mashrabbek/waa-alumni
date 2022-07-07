@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user/jobAd")
+@RequestMapping("/jobAd")
 public class JobAdController {
     private final JobAdService jobAdService;
 
@@ -22,13 +22,13 @@ public class JobAdController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<JobAd> getById(@PathVariable int id){
+    public ResponseEntity<JobAdDto> getById(@PathVariable int id){
         return ResponseEntity.ok().body(jobAdService.findById(id));
     }
 
     @PostMapping()
-    public ResponseEntity<JobAd> addJobAd(@RequestBody JobAd jobAd){
-        return ResponseEntity.ok().body(jobAdService.save(jobAd));
+    public ResponseEntity<JobAdDto> addJobAd(@RequestBody JobAdDto jobAdDto){
+        return ResponseEntity.ok().body(jobAdService.save(jobAdDto));
     }
 
     @PutMapping("/{id}")
