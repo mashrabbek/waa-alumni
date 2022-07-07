@@ -27,7 +27,7 @@ public class Config {
     @Bean
     public AmazonS3 s3() {
         AWSCredentials awsCredentials =
-                new BasicAWSCredentials("AKIAZSAT2NFC2L54DDHF", "VDuCb6sZdhlkAjAYWm3Tdw91QuCrT2eKu0VLF0BL");
+                new BasicAWSCredentials("", "");
         return AmazonS3ClientBuilder
                 .standard()
                 .withRegion("us-east-1")
@@ -35,4 +35,6 @@ public class Config {
                 .build();
 
     }
+
+   public static final String PUBLIC_AWS_URL = "https://waa-alumni.s3.amazonaws.com/";
 }

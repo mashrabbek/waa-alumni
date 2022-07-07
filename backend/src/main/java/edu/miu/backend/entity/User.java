@@ -1,5 +1,6 @@
 package edu.miu.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +16,7 @@ import java.util.List;
 public abstract class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @Column(nullable = false)
     private String email;
@@ -29,8 +30,10 @@ public abstract class User {
     private LocalDateTime lastLoggedIn;
     private Boolean active = true;
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonBackReference
     private Address address;
 
     @OneToMany(mappedBy = "creator")
+    @JsonBackReference
     private List<JobAd> jobAds;
 }

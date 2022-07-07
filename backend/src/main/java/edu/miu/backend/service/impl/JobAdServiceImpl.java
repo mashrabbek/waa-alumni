@@ -2,28 +2,28 @@ package edu.miu.backend.service.impl;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import edu.miu.backend.Config;
 import edu.miu.backend.dto.JobAdDto;
+import edu.miu.backend.dto.JobAdResponseDto;
 import edu.miu.backend.entity.JobAd;
-import edu.miu.backend.entity.Student;
-import edu.miu.backend.entity.Tag;
 import edu.miu.backend.entity.User;
-import edu.miu.backend.enums.BucketName;
 import edu.miu.backend.repo.JobAdRepo;
 import edu.miu.backend.repo.StudentRepo;
 import edu.miu.backend.repo.TagRepo;
 import edu.miu.backend.service.JobAdService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,12 +31,19 @@ import java.util.stream.Collectors;
 @Transactional
 public class JobAdServiceImpl implements JobAdService {
 
-    private final JobAdRepo jobAdRepo;
-    private final ModelMapper modelMapper;
-    private final StudentRepo studentRepo;
-    private final TagRepo tagRepo;
-
-    private final AmazonS3 amazonS3Client;
+    private JobAdRepo jobAdRepo;
+    private ModelMapper modelMapper;
+    private StudentRepo studentRepo;
+    private TagRepo tagRepo;
+    private AmazonS3 amazonS3Client;
+    @Autowired
+    public JobAdServiceImpl(JobAdRepo jobAdRepo, ModelMapper modelMapper, StudentRepo studentRepo, TagRepo tagRepo, AmazonS3 amazonS3Client) {
+        this.jobAdRepo = jobAdRepo;
+        this.modelMapper = modelMapper;
+        this.studentRepo = studentRepo;
+        this.tagRepo = tagRepo;
+        this.amazonS3Client = amazonS3Client;
+    }
 
     @Override
     public List<JobAd> findAll() {
@@ -49,17 +56,11 @@ public class JobAdServiceImpl implements JobAdService {
     }
 
     @Override
-    public JobAdDto save(JobAdDto jobAdDto) throws IOException {
+    public JobAdResponseDto save(JobAdDto jobAdDto) throws IOException {
 
         JobAd jobAd = modelMapper.map(jobAdDto, JobAd.class);
-        User student = studentRepo.findById(jobAd.getId()).get();
-//
-//        String tagIdList = request.getParameter("tagIds").trim();
-
-//        List<Integer> tagIds = new ArrayList<>();
-//        for(String tagid: tagIdList){
-//            tagIds.add(Integer.valueOf(tagid));
-//        }
+        User student = studentRepo.findById(jobAdDto.getCreatorId()).get();
+        jobAd.setCreator(student);
 
         var tagList = jobAdDto.getTagIds()
                 .stream()
@@ -67,27 +68,18 @@ public class JobAdServiceImpl implements JobAdService {
                 .collect(Collectors.toList());
 
         jobAd.setTags(tagList);
-        jobAd.setCreator(student);
 
-        List<String> fileUrlList = new ArrayList<>();
-        String url = "https://waa-alumni.s3.amazonaws.com/";
-        for(MultipartFile file: jobAdDto.getFiles()) {
+        List<String> fileUrlList = Arrays
+                .stream(jobAdDto.getFiles()).map(uploadFilesToAWSAndGetUrls)
+                .collect(Collectors.toList());
 
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(file.getSize());
-            String keyName = generateFileName(file);
-            try {
-                var res = amazonS3Client.putObject(BucketName.ALUMNI.getBucketName(), keyName, file.getInputStream(), metadata);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            fileUrlList.add(url + keyName);
-            System.out.println("File uploaded: " + keyName);
-        }
         jobAd.setFiles(fileUrlList);
 
-        return modelMapper.map(jobAdRepo.save(jobAd), JobAdDto.class);
+        JobAdResponseDto responseDto = modelMapper.map(jobAdRepo.save(jobAd), JobAdResponseDto.class);
+        responseDto.setCreatorId(jobAd.getCreator().getId());
+        return responseDto;
     }
+
 
     @Override
     public void delete(int id) {
@@ -111,28 +103,20 @@ public class JobAdServiceImpl implements JobAdService {
 
         return jobAdDto;
     }
-//    public JobAdDto save(HttpServletRequest request, MultipartFile[] files) {
-//
-//       request.getParameter("description");
-//       request.getParameter("benefits");
-//       request.getParameter("creatorId");
-//       String[] tagIds = request.getParameterValues("tagIds");
+    private Function<MultipartFile, String> uploadFilesToAWSAndGetUrls = (multipartFile) -> {
 
-
-//        for(MultipartFile file: files) {
-//            ObjectMetadata metadata = new ObjectMetadata();
-//            metadata.setContentLength(file.getSize());
-//            String keyName = generateFileName(file);
-//            try {
-//                var res = amazonS3Client.putObject(BucketName.ALUMNI.getBucketName(), keyName, file.getInputStream(), metadata);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//            System.out.println("File uploaded: " + keyName);
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(multipartFile.getSize());
+        String keyName = generateFileName(multipartFile);
+//        try {
+//            var result = amazonS3Client
+//                    .putObject(BucketName.ALUMNI.getBucketName(), keyName, multipartFile.getInputStream(), metadata);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
 //        }
-        // https://waa-alumni.s3.amazonaws.com/1657158181442-Assignment_4_-_IAM.pdf
-//        return null;
-//    }
+        return Config.PUBLIC_AWS_URL + keyName;
+    };
+
     private String generateFileName(MultipartFile multiPart) {
         return new Date().getTime() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
     }

@@ -1,5 +1,6 @@
 package edu.miu.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ public class Address {
     private String zip;
 
     @OneToOne(mappedBy ="address")
+    @JsonManagedReference
     private User user;
 
 }

@@ -1,5 +1,6 @@
 package edu.miu.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ public class JobAd {
     private String description;
     private String benefits;
     @ManyToOne
+    @JsonManagedReference
     private User creator;
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Tag> tags;
