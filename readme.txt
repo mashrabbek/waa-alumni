@@ -2,4 +2,4 @@
 docker compose --env-file .env up
 
 # command to destroy postgres and keycloak env
-docker compose --env-file .env up
+docker compose --env-file .env down

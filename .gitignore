@@ -4,6 +4,9 @@ application.yml
 # Compiled class file
 *.class
 
+# environment files
+.env
+
 # Log file
 *.log
 
