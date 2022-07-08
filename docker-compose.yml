@@ -1,0 +1,45 @@
+version: '3.1'
+
+services:
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRESQL_USER}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASS}
+      POSTGRES_DB: ${POSTGRESQL_DB}
+    restart: always
+    volumes:
+        - postgres_data:/var/lib/postgresql/data
+
+    ports:
+      - "5433:5432"
+    networks:
+      - alumni-keycloak
+      
+  keycloak:
+    image: quay.io/keycloak/keycloak:18.0.2
+    container_name: alumni-keycloak
+    depends_on:
+      - postgres
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD} 
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: ${POSTGRESQL_DB}
+      DB_USER: ${POSTGRESQL_USER}
+      DB_PASSWORD: ${POSTGRESQL_PASS}
+    ports:
+      - 8081:8080
+    restart: unless-stopped
+    networks:
+      - alumni-keycloak
+      
+volumes:
+  postgres_data:
+      driver: local
+      
+networks:
+  alumni-keycloak:
