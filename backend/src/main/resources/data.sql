@@ -15,17 +15,17 @@ VALUES (1, true, 'Lead@gmail.com', 'John', null, 'Doe', 'Prsard1997', 1, 3.85, 1
 
 INSERT INTO student_comment (id, comment, faculty_id, student_id) VALUES (1, 'This guy is eligible', 2, 1);
 
-INSERT INTO job_ad (id, benefits, description, creator_id)
-VALUES (1, '$50k sign in bonus', 'Microsoft Job Position', 1);
+-- INSERT INTO job_ad (id, benefits, description, creator_id)
+-- VALUES (1, '$50k sign in bonus', 'Microsoft Job Position', 1);
+--
+-- INSERT INTO job_ad (id, benefits, description, creator_id)
+-- VALUES (2, '$40k sign in bonus', 'Google Job Position', 1);
+--
+-- INSERT INTO job_ad_tags (job_ad_id, tags_id)
+-- VALUES (1,  1);
 
-INSERT INTO job_ad (id, benefits, description, creator_id)
-VALUES (2, '$40k sign in bonus', 'Google Job Position', 1);
-
-INSERT INTO job_ad_tags (job_ad_id, tags_id)
-VALUES (1,  1);
-
-INSERT INTO job_ad_tags (job_ad_id, tags_id)
-VALUES (1,  2);
+-- INSERT INTO job_ad_tags (job_ad_id, tags_id)
+-- VALUES (1,  2);
 
 
 

@@ -2,11 +2,11 @@ package edu.miu.backend.service.impl;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import edu.miu.backend.Config;
 import edu.miu.backend.dto.JobAdDto;
 import edu.miu.backend.dto.JobAdResponseDto;
 import edu.miu.backend.entity.JobAd;
 import edu.miu.backend.entity.User;
+import edu.miu.backend.enums.BucketName;
 import edu.miu.backend.repo.JobAdRepo;
 import edu.miu.backend.repo.StudentRepo;
 import edu.miu.backend.repo.TagRepo;
@@ -15,9 +15,11 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.Transient;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Arrays;
@@ -31,11 +33,23 @@ import java.util.stream.Collectors;
 @Transactional
 public class JobAdServiceImpl implements JobAdService {
 
-    private final JobAdRepo jobAdRepo;
-    private final ModelMapper modelMapper;
-    private final StudentRepo studentRepo;
-    private final TagRepo tagRepo;
-    private final AmazonS3 amazonS3Client;
+    private JobAdRepo jobAdRepo;
+    private ModelMapper modelMapper;
+    private StudentRepo studentRepo;
+    private TagRepo tagRepo;
+
+    private AmazonS3 amazonS3Client;
+    @Autowired
+    public JobAdServiceImpl(JobAdRepo jobAdRepo, ModelMapper modelMapper, StudentRepo studentRepo, TagRepo tagRepo, AmazonS3 amazonS3Client) {
+        this.jobAdRepo = jobAdRepo;
+        this.modelMapper = modelMapper;
+        this.studentRepo = studentRepo;
+        this.tagRepo = tagRepo;
+        this.amazonS3Client = amazonS3Client;
+    }
+
+//    @Value("${aws.s3.bucket_url}")
+    private String AWS_URL = String.format("https://%s.s3.amazonaws.com/", BucketName.ALUMNI.getBucketName());
 
     @Override
     public List<JobAd> findAll() {
@@ -67,13 +81,13 @@ public class JobAdServiceImpl implements JobAdService {
                     ObjectMetadata metadata = new ObjectMetadata();
                     metadata.setContentLength(multipartFile.getSize());
                     String keyName = generateFileName(multipartFile);
-//        try {
-//            var result = amazonS3Client
-//                    .putObject(BucketName.ALUMNI.getBucketName(), keyName, multipartFile.getInputStream(), metadata);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-                    return Config.PUBLIC_AWS_URL + keyName;
+                try {
+                    var result = amazonS3Client
+                            .putObject(BucketName.ALUMNI.getBucketName(), keyName, multipartFile.getInputStream(), metadata);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                    return AWS_URL.concat(keyName);
                 })
                 .collect(Collectors.toList());
 
@@ -90,6 +104,7 @@ public class JobAdServiceImpl implements JobAdService {
         jobAdRepo.deleteById(id);
     }
 
+    //TODO file change handle
     @Override
     public JobAdDto update(JobAdDto jobAdDto, int id) throws Exception {
         JobAd jobAd = jobAdRepo.findById(id)
@@ -107,19 +122,6 @@ public class JobAdServiceImpl implements JobAdService {
 
         return jobAdDto;
     }
-//    private Function<MultipartFile, String> uploadFilesToAWSAndGetUrls = (multipartFile) -> {
-//
-//        ObjectMetadata metadata = new ObjectMetadata();
-//        metadata.setContentLength(multipartFile.getSize());
-//        String keyName = generateFileName(multipartFile);
-////        try {
-////            var result = amazonS3Client
-////                    .putObject(BucketName.ALUMNI.getBucketName(), keyName, multipartFile.getInputStream(), metadata);
-////        } catch (IOException e) {
-////            throw new RuntimeException(e);
-////        }
-//        return Config.PUBLIC_AWS_URL + keyName;
-//    };
 
     private String generateFileName(MultipartFile multiPart) {
         return new Date().getTime() + "-" + multiPart.getOriginalFilename().replace(" ", "_");

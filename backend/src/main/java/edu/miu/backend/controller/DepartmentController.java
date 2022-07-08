@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RestController
@@ -17,16 +18,19 @@ public class DepartmentController {
 
 
     @GetMapping("")
+//    @RolesAllowed({"admin", "student", "faculty"})
     public ResponseEntity<List<Department>> getAll(){
         return ResponseEntity.ok().body(departmentService.findAll());
     }
 
     @GetMapping("/{id}")
+    @RolesAllowed({"admin", "student", "faculty"})
     public ResponseEntity<Department> getById(@PathVariable int id){
         return ResponseEntity.ok().body(departmentService.findById(id));
     }
 
-    @PostMapping()
+    @PostMapping("")
+    @RolesAllowed("student")
     public ResponseEntity<Department> addDepartment(@RequestBody Department department){
         return ResponseEntity.ok().body(departmentService.save(department));
     }

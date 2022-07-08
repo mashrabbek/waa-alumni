@@ -1,5 +1,4 @@
 #application config
-pom.xml
 application.yml
 .idea
 # Compiled class file
