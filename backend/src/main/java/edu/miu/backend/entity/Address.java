@@ -2,11 +2,16 @@ package edu.miu.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Entity
 @Data
+@SQLDelete(sql = "UPDATE address SET deleted = true WHERE id=?")
+@Where(clause = "deleted = false")
 public class Address {
 
     @Id
@@ -20,4 +25,5 @@ public class Address {
     @JsonManagedReference
     private User user;
 
+    private boolean deleted = Boolean.FALSE;
 }
