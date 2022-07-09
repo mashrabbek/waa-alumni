@@ -3,6 +3,10 @@ package edu.miu.backend.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.beans.factory.annotation.Value;
 
 
@@ -13,6 +17,7 @@ import java.util.List;
 @Entity(name = "users")
 @Data
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Where(clause = "deleted = false")
 public abstract class User {
 
     @Id
@@ -28,7 +33,7 @@ public abstract class User {
     private String password;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastLoggedIn;
-    private Boolean active = true;
+    private Boolean active = Boolean.TRUE;
     @OneToOne(cascade = CascadeType.ALL)
     @JsonBackReference
     private Address address;
@@ -36,4 +41,6 @@ public abstract class User {
     @OneToMany(mappedBy = "creator")
     @JsonBackReference
     private List<JobAd> jobAds;
+    private Boolean deleted = Boolean.FALSE;
+
 }
