@@ -7,6 +7,8 @@ application.yml
 # environment files
 .env
 
+docker-compose.yml
+
 # Log file
 *.log
 
