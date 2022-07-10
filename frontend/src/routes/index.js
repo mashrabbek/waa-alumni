@@ -22,7 +22,6 @@ const PageRoutes = () => {
   return (
     <>
       {/* <Menu keycloak={keycloak} keycloakInitialized={initialized} /> */}
-      <BrowserRouter>
         <Routes>
           <Route exact path="/" component={HomePage} />
           <Route path="/" component={Profile} />
@@ -36,7 +35,6 @@ const PageRoutes = () => {
             component={ProtectedPage}
           /> */}
         </Routes>
-      </BrowserRouter>
     </>
   );
 };

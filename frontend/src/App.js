@@ -1,17 +1,25 @@
 import logo from "./logo.svg";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import React from "react";
+import React, { StrictMode } from "react";
 import { AppRouter } from "./containers/AppRouter";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import keycloak from "./Keycloak";
+import HomePage from "./pages/Home";
 
 function App() {
   return (
-    <ReactKeycloakProvider authClient={keycloak}>
-      <div className="App wrapper">{/* <AppRouter /> */}</div>
-    </ReactKeycloakProvider>
+    <div>
+    <ReactKeycloakProvider
+    initOptions={{ onLoad: 'login-required',
+    promiseType: "native", }}
+    authClient={keycloak}>
+       <div className="App wrapper"><AppRouter></AppRouter>
+       </div>
+   </ReactKeycloakProvider>
+   </div>
   );
 }
+
 
 export default App;

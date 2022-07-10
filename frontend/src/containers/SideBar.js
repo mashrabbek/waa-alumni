@@ -49,7 +49,7 @@ export default function SideBar({ isOpen, toggle }) {
         <h3>Alumni Portal</h3>
       </div>
       <div className="side-menu">
-        {/* <Nav vertical className="list-unstyled pb-3">
+        <Nav vertical className="list-unstyled pb-3">
           <p>Mashrabbek Akbarov</p>
           {routes.map((elem) => {
             return isAuthorized(elem) ? (
@@ -61,7 +61,7 @@ export default function SideBar({ isOpen, toggle }) {
               </NavItem>
             ) : null;
           })}
-        </Nav> */}
+        </Nav>
       </div>
     </div>
   );
