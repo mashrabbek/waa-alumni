@@ -1,6 +1,7 @@
 package edu.miu.backend.controller;
 
 import edu.miu.backend.dto.StudentDto;
+import edu.miu.backend.dto.StudentResponseDto;
 import edu.miu.backend.entity.Student;
 import edu.miu.backend.service.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +13,9 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users/student")
+@CrossOrigin(origins = "*")
 public class StudentController {
     private final StudentService studentService;
-
 
     @GetMapping("")
     public ResponseEntity<List<Student>> getAll(){
@@ -32,7 +33,7 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StudentDto> updateStudent(@RequestBody StudentDto studentDto, @PathVariable int id) throws Exception {
+    public ResponseEntity<StudentResponseDto> updateStudent(@ModelAttribute StudentDto studentDto, @PathVariable int id) throws Exception {
         return  ResponseEntity.ok().body(studentService.update(studentDto, id));
     }
 
