@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +31,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student findById(int id) {
-        return studentRepo.findById(id).get();
+//        Optional<Student> student = studentRepo.findById(id);
+//        if (student.isPresent()){
+//            return student.get();
+//        }
+        return studentRepo.findById(id).orElse(null);
     }
 
     @Override
@@ -49,7 +54,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     @Transactional
     public StudentDto update(StudentDto studentDto, int id) throws Exception {
-        Student st = studentRepo.findById(id).orElseGet(null);
+        Student st = studentRepo.findById(id).orElse(null);
         Student stMapped = modelMapper.map(studentDto, Student.class);
 
         if(st == null){
