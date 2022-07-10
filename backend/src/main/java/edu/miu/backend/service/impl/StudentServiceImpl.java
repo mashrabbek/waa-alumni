@@ -1,6 +1,7 @@
 package edu.miu.backend.service.impl;
 
 import edu.miu.backend.dto.StudentDto;
+import edu.miu.backend.dto.StudentResponseDto;
 import edu.miu.backend.entity.Department;
 import edu.miu.backend.entity.Student;
 import edu.miu.backend.repo.DepartmentRepo;
@@ -31,18 +32,16 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student findById(int id) {
-//        Optional<Student> student = studentRepo.findById(id);
-//        if (student.isPresent()){
-//            return student.get();
-//        }
         return studentRepo.findById(id).orElse(null);
     }
 
     @Override
     public StudentDto save(StudentDto studentDto) {
         Student student = modelMapper.map(studentDto, Student.class);
-        Department department = departmentRepo.findById(studentDto.getMajorId()).get();
-        student.setMajor(department);
+        if (studentDto.getMajorId() != null){
+            Department department = departmentRepo.findById(studentDto.getMajorId()).get();
+            student.setMajor(department);
+        }
         return modelMapper.map(studentRepo.save(student), StudentDto.class);
     }
 
@@ -53,26 +52,22 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional
-    public StudentDto update(StudentDto studentDto, int id) throws Exception {
-        Student st = studentRepo.findById(id).orElse(null);
+    public StudentResponseDto update(StudentDto studentDto, int id) throws Exception {
+        Student student = studentRepo.findById(id).orElseThrow(()-> new Exception("Student not found!"));
         Student stMapped = modelMapper.map(studentDto, Student.class);
+        Department department = departmentRepo.findById(studentDto.getMajorId()).orElseThrow(()-> new Exception("Department not found!"));
 
-        if(st == null){
-            throw new Exception("Student not found!");
-        }
-        Department depRef = departmentRepo.findById(studentDto.getMajorId()).get();
+        student.setEmail(stMapped.getEmail());
+        student.setFirstName(stMapped.getFirstName());
+        student.setLastName(stMapped.getLastName());
+        student.setGpa(stMapped.getGpa());
+        student.setMajor(department);
+        student.setAddress(stMapped.getAddress());
+        student.setCv("http://aws.sardor/sarodbek/Resume_Apple.pdf");
 
-        if(depRef == null){
-            throw new Exception("Department not found!");
-        }
-        st.setEmail(stMapped.getEmail());
-        st.setFirstName(stMapped.getFirstName());
-        st.setLastName(stMapped.getLastName());
-        st.setGpa(stMapped.getGpa());
-        st.setMajor(depRef);
-        st.setAddress(stMapped.getAddress());
-
-        return studentDto;
+        StudentResponseDto studentResponseDto = modelMapper.map(student, StudentResponseDto.class);
+        studentResponseDto.setMajorId(department.getId());
+        return studentResponseDto;
     }
 
 

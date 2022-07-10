@@ -22,6 +22,8 @@ public class Student extends User {
     @JsonBackReference
     List<JobHistory> jobHistories;
 
+    private String cv;
+
     private Boolean deleted = Boolean.FALSE;
 
 }

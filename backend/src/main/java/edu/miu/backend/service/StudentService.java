@@ -1,6 +1,7 @@
 package edu.miu.backend.service;
 
 import edu.miu.backend.dto.StudentDto;
+import edu.miu.backend.dto.StudentResponseDto;
 import edu.miu.backend.entity.Student;
 
 import java.util.List;
@@ -14,5 +15,5 @@ public interface StudentService {
 
     void delete(int id);
 
-    StudentDto update(StudentDto studentDto, int id) throws Exception;
+    StudentResponseDto update(StudentDto studentDto, int id) throws Exception;
 }

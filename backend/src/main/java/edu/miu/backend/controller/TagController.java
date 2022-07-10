@@ -10,6 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/tag")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class TagController {
     
     private final TagService tagService;

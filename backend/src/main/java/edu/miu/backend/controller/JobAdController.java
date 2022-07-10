@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/jobAd")
+@CrossOrigin(origins = "*")
 public class JobAdController {
     private final JobAdService jobAdService;
 
