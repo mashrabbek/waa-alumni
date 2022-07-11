@@ -3,6 +3,7 @@ INSERT INTO tag (id, deleted, description, name) VALUES (2, false, 'Java develop
 INSERT INTO tag (id, deleted, description, name) VALUES (3, false, 'Java developer position', 'Spring');
 
 INSERT INTO department (id, deleted, description, name) VALUES (1, false, 'Students who need permenant US visa', 'Compro');
+INSERT INTO department (id, deleted, description, name) VALUES (2, false, 'Students who don''t need to think anout Visa', 'MSD');
 --
 -- INSERT INTO address (id, city, state, zip) VALUES (1, 'Fairfield', 'Iowa', '52557');
 -- INSERT INTO address (id, city, state, zip) VALUES (2, 'Fairfield', 'Iowa', '52557');

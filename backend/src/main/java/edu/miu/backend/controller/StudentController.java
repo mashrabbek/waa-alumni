@@ -43,11 +43,6 @@ public class StudentController {
         return ResponseEntity.ok().body(studentService.update(studentDto, username));
     }
 
-//    @DeleteMapping("/{id}")
-//    public void deleteStudent(@PathVariable int id){
-//        studentService.delete(id);
-//    }
-
     @DeleteMapping("/{username}")
     public void deleteStudentByUsername(@PathVariable String username){
         studentService.deleteByUsername(username);

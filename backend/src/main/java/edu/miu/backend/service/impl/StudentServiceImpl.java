@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,7 +86,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponseDto update(StudentDto studentDto, String username) throws Exception {
-        Student student = studentRepo.findByUsername(username).orElseThrow(()-> new Exception("Student not found!"));
+        Optional<Student> studentRef = studentRepo.findByUsername(username);
+        if (!studentRef.isPresent()){
+             return save(studentDto);
+        }
+        Student student = studentRef.get();
         Student stMapped = modelMapper.map(studentDto, Student.class);
         Department department = departmentRepo.findById(studentDto.getMajorId()).orElseThrow(()-> new Exception("Department not found!"));
 
