@@ -3,12 +3,7 @@ package edu.miu.backend.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.springframework.beans.factory.annotation.Value;
-
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,14 +18,8 @@ public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    @Column(nullable = false)
-    private String email;
-    @Column(nullable = false)
-    private String lastName;
-    @Column(nullable = false)
-    private String firstName;
-    @Column(nullable = false)
-    private String password;
+    @Column(unique=true)
+    private String username;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastLoggedIn;
     private Boolean active = Boolean.TRUE;

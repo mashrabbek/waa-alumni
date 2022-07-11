@@ -8,13 +8,17 @@ import edu.miu.backend.entity.Faculty;
 import java.util.List;
 
 public interface FacultyService {
-    List<Faculty> findAll();
+    List<FacultyDto> findAll();
 
     Faculty findById(int id);
 
     FacultyDto save(FacultyDto facultyDto) throws Exception;
 
-    FacultyDto update(FacultyDto facultyDto, int id)  throws Exception;
+    FacultyDto update(FacultyDto facultyDto, String username)  throws Exception;
 
     void delete(int id);
+
+    FacultyDto findByUsername(String username);
+
+    void deleteByUsername(String username);
 }
