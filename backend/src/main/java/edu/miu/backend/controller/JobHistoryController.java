@@ -32,5 +32,10 @@ public class JobHistoryController {
         return ResponseEntity.ok().body(jobHistoryService.update(jobHistoryDto, id));
     }
 
+    @DeleteMapping("/id")
+    public void deleteJobHistory(@PathVariable int id){
+        jobHistoryService.deleteByID(id);
+    }
+
 
 }

@@ -73,6 +73,7 @@ public class StudentServiceImpl implements StudentService {
         }
         String cvUrl = uploadFileToAWSAndGetUrl(studentDto.getFile());
         student.setCv(cvUrl);
+        student.setDeleted(Boolean.FALSE);
 
         StudentResponseDto studentResponseDto = modelMapper.map(studentRepo.save(student), StudentResponseDto.class);
         studentResponseDto.setMajorId(student.getMajor().getId());
@@ -98,8 +99,12 @@ public class StudentServiceImpl implements StudentService {
         student.setMajor(department);
         student.setAddress(stMapped.getAddress());
 
-        String cvUrl = uploadFileToAWSAndGetUrl(studentDto.getFile());
-        student.setCv(cvUrl);
+        if (studentDto.getFile() != null) {
+            String cvUrl = uploadFileToAWSAndGetUrl(studentDto.getFile());
+            student.setCv(cvUrl);
+        }
+
+        student.setDeleted(Boolean.FALSE);
 
         StudentResponseDto studentResponseDto = modelMapper.map(student, StudentResponseDto.class);
         studentResponseDto.setMajorId(department.getId());

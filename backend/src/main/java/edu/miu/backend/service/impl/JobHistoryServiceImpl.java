@@ -43,4 +43,9 @@ public class JobHistoryServiceImpl implements JobHistoryService {
         ;
         return modelMapper.map(jobHistoryRepo.save(jobHistory), JobHistoryDto.class);
     }
+
+    @Override
+    public void deleteByID(int id) {
+        jobHistoryRepo.deleteById(id);
+    }
 }
