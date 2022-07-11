@@ -11,4 +11,6 @@ public interface JobHistoryService {
     JobHistoryDto findById(int id);
 
     JobHistoryDto update(JobHistoryDto jobHistoryDto, int id);
+
+    void deleteByID(int id);
 }
