@@ -8,11 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FacultyDto {
-    private Integer id;
-    private String email;
-    private String lastName;
-    private String firstName;
-    private String password;
+    private String username;
     private AddressDto address;
     private Integer departmentId;
 }

@@ -19,7 +19,7 @@ public class FacultyController {
 
 
     @GetMapping("")
-    public ResponseEntity<List<Faculty>> getAll(){
+    public ResponseEntity<List<FacultyDto>> getAll(){
         return ResponseEntity.ok().body(facultyService.findAll());
     }
 
@@ -28,14 +28,19 @@ public class FacultyController {
         return ResponseEntity.ok().body(facultyService.findById(id));
     }
 
+    @GetMapping("/{username}")
+    public ResponseEntity<FacultyDto> getByUsername(@PathVariable String username){
+        return ResponseEntity.ok().body(facultyService.findByUsername(username));
+    }
+
     @PostMapping("")
     public ResponseEntity<FacultyDto> addFaculty(@RequestBody FacultyDto facultyDto) throws Exception {
         return ResponseEntity.ok().body(facultyService.save(facultyDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<FacultyDto> updateFaculty(@RequestBody FacultyDto facultyDto, @PathVariable int id) throws Exception {
-        return  ResponseEntity.ok().body(facultyService.update(facultyDto, id));
+    public ResponseEntity<FacultyDto> updateFaculty(@RequestBody FacultyDto facultyDto, @PathVariable String username) throws Exception {
+        return  ResponseEntity.ok().body(facultyService.update(facultyDto, username));
     }
 
     @DeleteMapping("/{id}")

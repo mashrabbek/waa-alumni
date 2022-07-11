@@ -11,7 +11,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +25,9 @@ public class FacultyServiceImpl implements FacultyService {
     private final ModelMapper modelMapper;
 
     @Override
-    public List<Faculty> findAll() {
-        return (List<Faculty>) facultyRepo.findAll();
+    public List<FacultyDto> findAll() {
+        List<Faculty> faculties = (List<Faculty>) facultyRepo.findAll();
+        return faculties.stream().map(faculty -> modelMapper.map(faculties, FacultyDto.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -34,6 +37,9 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public FacultyDto save(FacultyDto facultyDto) throws Exception {
+        if (facultyRepo.findByUsername(facultyDto.getUsername()).isPresent()){
+            throw new SQLException("Faculty with username "+ facultyDto.getUsername() + " already exists" );
+        }
         Faculty faculty = modelMapper.map(facultyDto, Faculty.class);
         Department department = departmentRepo.findById(facultyDto.getDepartmentId())
                 .orElseThrow(()-> new Exception("Faculty not found"));
@@ -43,25 +49,29 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     @Transactional
-    public FacultyDto update(FacultyDto facultyDto, int id) throws Exception {
+    public FacultyDto update(FacultyDto facultyDto, String username) throws Exception {
 
-        Faculty stMapped = modelMapper.map(facultyDto, Faculty.class);
-        Department depRef = departmentRepo.findById(facultyDto.getDepartmentId())
+        Faculty facultyMapped = modelMapper.map(facultyDto, Faculty.class);
+        Department department = departmentRepo.findById(facultyDto.getDepartmentId())
                 .orElseThrow(()->new Exception("Department not found!"));
 
-        Faculty faculty = facultyRepo.findById(id)
+        Faculty faculty = facultyRepo.findByUsername(username)
                 .orElseThrow(()-> new Exception("Faculty not found!"));
-        faculty.setEmail(stMapped.getEmail());
-        faculty.setFirstName(stMapped.getFirstName());
-        faculty.setLastName(stMapped.getLastName());
-        faculty.setDepartment(depRef);
-        faculty.setAddress(stMapped.getAddress());
+
+        faculty.setDepartment(department);
+        faculty.setAddress(facultyMapped.getAddress());
 
         return facultyDto;
     }
 
     @Override
+    @Transactional
     public void delete(int id) {
         facultyRepo.deleteById(id);
+    }
+
+    @Override
+    public FacultyDto findByUsername(String username) {
+        return modelMapper.map(facultyRepo.findByUsername(username), FacultyDto.class);
     }
 }
