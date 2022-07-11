@@ -38,14 +38,14 @@ public class FacultyController {
         return ResponseEntity.ok().body(facultyService.save(facultyDto));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{username}")
     public ResponseEntity<FacultyDto> updateFaculty(@RequestBody FacultyDto facultyDto, @PathVariable String username) throws Exception {
         return  ResponseEntity.ok().body(facultyService.update(facultyDto, username));
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteFaculty(@PathVariable int id){
-        facultyService.delete(id);
+    @DeleteMapping("/{username}")
+    public void deleteFaculty(@PathVariable String username){
+        facultyService.deleteByUsername(username);
     }
 
 }

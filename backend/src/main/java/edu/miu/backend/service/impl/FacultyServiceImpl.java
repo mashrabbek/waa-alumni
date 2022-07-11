@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class FacultyServiceImpl implements FacultyService {
     private final FacultyRepo facultyRepo;
 
@@ -48,7 +49,6 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    @Transactional
     public FacultyDto update(FacultyDto facultyDto, String username) throws Exception {
 
         Faculty facultyMapped = modelMapper.map(facultyDto, Faculty.class);
@@ -65,7 +65,6 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    @Transactional
     public void delete(int id) {
         facultyRepo.deleteById(id);
     }
@@ -73,5 +72,10 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public FacultyDto findByUsername(String username) {
         return modelMapper.map(facultyRepo.findByUsername(username), FacultyDto.class);
+    }
+
+    @Override
+    public void deleteByUsername(String username) {
+        facultyRepo.deleteByUsername(username);
     }
 }

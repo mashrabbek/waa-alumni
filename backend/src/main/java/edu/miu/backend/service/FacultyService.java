@@ -19,4 +19,6 @@ public interface FacultyService {
     void delete(int id);
 
     FacultyDto findByUsername(String username);
+
+    void deleteByUsername(String username);
 }
