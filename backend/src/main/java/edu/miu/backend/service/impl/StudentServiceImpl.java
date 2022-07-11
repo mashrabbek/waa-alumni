@@ -2,8 +2,12 @@ package edu.miu.backend.service.impl;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.miu.backend.dto.AddressDto;
 import edu.miu.backend.dto.StudentDto;
 import edu.miu.backend.dto.StudentResponseDto;
+import edu.miu.backend.entity.Address;
 import edu.miu.backend.entity.Department;
 import edu.miu.backend.entity.Student;
 import edu.miu.backend.enums.BucketName;
@@ -34,13 +38,15 @@ public class StudentServiceImpl implements StudentService {
     private final DepartmentRepo departmentRepo;
 
     private final ModelMapper modelMapper;
+    private final ObjectMapper objectMapper;
     private AmazonS3 amazonS3Client;
     @Autowired
-    public StudentServiceImpl(StudentRepo studentRepo, DepartmentRepo departmentRepo, ModelMapper modelMapper, AmazonS3 amazonS3Client) {
+    public StudentServiceImpl(StudentRepo studentRepo, DepartmentRepo departmentRepo, ModelMapper modelMapper, AmazonS3 amazonS3Client,ObjectMapper objectMapper) {
         this.studentRepo = studentRepo;
         this.departmentRepo = departmentRepo;
         this.modelMapper = modelMapper;
         this.amazonS3Client = amazonS3Client;
+        this.objectMapper = objectMapper;
     }
 
     private String AWS_URL = String.format("https://%s.s3.amazonaws.com/", BucketName.ALUMNI.getBucketName());
@@ -63,6 +69,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponseDto save(StudentDto studentDto) throws SQLException {
+
+        AddressDto address = null;
+        try {
+            address = objectMapper.readValue(studentDto.getAddress(), AddressDto.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
         if (studentRepo.findByUsername(studentDto.getUsername()).isPresent()){
             throw new SQLException("Student with username " + studentDto.getUsername()+ " already exists");
         }
@@ -74,6 +88,7 @@ public class StudentServiceImpl implements StudentService {
         String cvUrl = uploadFileToAWSAndGetUrl(studentDto.getFile());
         student.setCv(cvUrl);
         student.setDeleted(Boolean.FALSE);
+        student.setAddress(modelMapper.map(address, Address.class));
 
         StudentResponseDto studentResponseDto = modelMapper.map(studentRepo.save(student), StudentResponseDto.class);
         studentResponseDto.setMajorId(student.getMajor().getId());
@@ -87,6 +102,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponseDto update(StudentDto studentDto, String username) throws Exception {
+
+        AddressDto address = null;
+        try {
+            address = objectMapper.readValue(studentDto.getAddress(), AddressDto.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
         Optional<Student> studentRef = studentRepo.findByUsername(username);
         if (!studentRef.isPresent()){
              return save(studentDto);
@@ -97,7 +120,7 @@ public class StudentServiceImpl implements StudentService {
 
         student.setGpa(stMapped.getGpa());
         student.setMajor(department);
-        student.setAddress(stMapped.getAddress());
+        student.setAddress(modelMapper.map(address, Address.class));
 
         if (studentDto.getFile() != null) {
             String cvUrl = uploadFileToAWSAndGetUrl(studentDto.getFile());

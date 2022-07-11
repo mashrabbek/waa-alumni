@@ -1,5 +1,6 @@
 package edu.miu.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import edu.miu.backend.entity.Department;
 import edu.miu.backend.entity.Student;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import javax.persistence.Column;
 @AllArgsConstructor
 public class StudentDto {
     String username;
-    private AddressDto address;
+    private String address;
     private Integer majorId;
     private Float gpa;
     private MultipartFile file;
