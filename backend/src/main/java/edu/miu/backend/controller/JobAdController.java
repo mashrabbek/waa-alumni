@@ -1,7 +1,7 @@
 package edu.miu.backend.controller;
 
 import edu.miu.backend.dto.JobAdDto;
-import edu.miu.backend.dto.JobAdResponseDto;
+import edu.miu.backend.dto.responseDto.JobAdResponseDto;
 import edu.miu.backend.entity.JobAd;
 import edu.miu.backend.service.JobAdService;
 import lombok.RequiredArgsConstructor;
