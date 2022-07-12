@@ -1,7 +1,7 @@
 package edu.miu.backend.service;
 
 import edu.miu.backend.dto.JobAdDto;
-import edu.miu.backend.dto.JobAdResponseDto;
+import edu.miu.backend.dto.responseDto.JobAdResponseDto;
 import edu.miu.backend.entity.JobAd;
 
 import java.io.IOException;

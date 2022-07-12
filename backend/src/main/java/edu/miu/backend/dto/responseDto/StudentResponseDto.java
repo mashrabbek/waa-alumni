@@ -1,5 +1,6 @@
-package edu.miu.backend.dto;
+package edu.miu.backend.dto.responseDto;
 
+import edu.miu.backend.dto.AddressDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

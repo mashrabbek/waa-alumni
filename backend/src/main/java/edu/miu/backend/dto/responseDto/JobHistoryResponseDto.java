@@ -1,21 +1,18 @@
-package edu.miu.backend.dto;
-
+package edu.miu.backend.dto.responseDto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import edu.miu.backend.entity.Student;
+import edu.miu.backend.entity.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class JobHistoryDto {
-
+public class JobHistoryResponseDto {
     private Integer id;
     private String companyName;
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -23,5 +20,5 @@ public class JobHistoryDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
     private String reasonToLeave;
-    private List<Integer> tagIds;
+    private List<Tag> tags;
 }
