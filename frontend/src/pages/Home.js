@@ -1,6 +1,7 @@
 import React from "react";
 // import { useKeycloak } from "@react-keycloak/web";
 //import AuthrizedElement from "../components/AuthrizedElement";
+import { useSelector } from "react-redux";
 import { Form, FormGroup, Label, Input } from "reactstrap";
 const HomePage = ({ keycloak }) => {
   // const [keycloak, initialized] = useKeycloak();
@@ -13,7 +14,7 @@ const HomePage = ({ keycloak }) => {
         id="exampleText"
         name="text"
         type="textarea"
-        value={keycloak.token}
+        defaultValue={keycloak.token}
       />
       {/* <textarea width="150">{keycloak.token}</textarea> */}
       {/* {initialized ? (
