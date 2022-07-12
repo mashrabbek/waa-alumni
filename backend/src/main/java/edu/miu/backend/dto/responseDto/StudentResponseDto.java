@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class StudentResponseDto {
     private String username;
-    private AddressDto address;
+    private String address;
     private Integer majorId;
     private Float gpa;
     private String cv;
