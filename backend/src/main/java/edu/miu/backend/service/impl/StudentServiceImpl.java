@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -51,8 +52,20 @@ public class StudentServiceImpl implements StudentService {
     private String AWS_URL = String.format("https://%s.s3.amazonaws.com/", BucketName.ALUMNI.getBucketName());
 
     @Override
-    public Student findByUsername(String username) {
-        return studentRepo.findByUsername(username).orElse(null);
+    public StudentResponseDto findByUsername(String username) {
+      Optional<Student> student = studentRepo.findByUsername(username);
+      if (!student.isPresent()){ return null;}
+
+      StudentResponseDto studentDto = modelMapper.map(student.get(), StudentResponseDto.class);
+      String address = null;
+        try {
+           address = objectMapper.writeValueAsString(modelMapper.map(student.get().getAddress(), AddressDto.class));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        studentDto.setAddress(address);
+        studentDto.setMajorId(student.get().getMajor().getId());
+        return studentDto;
     }
 
     @Override
@@ -84,8 +97,14 @@ public class StudentServiceImpl implements StudentService {
             Department department = departmentRepo.findById(studentDto.getMajorId()).get();
             student.setMajor(department);
         }
-        String cvUrl = uploadFileToAWSAndGetUrl(studentDto.getFile());
-        student.setCv(cvUrl);
+
+        if (studentDto.getFile() != null) {
+            String cvUrl = uploadFileToAWSAndGetUrl(studentDto.getFile());
+            student.setCv(cvUrl);
+        }
+
+//        String cvUrl = uploadFileToAWSAndGetUrl(studentDto.getFile());
+//        student.setCv(cvUrl);
         student.setDeleted(Boolean.FALSE);
         student.setAddress(modelMapper.map(address, Address.class));
 

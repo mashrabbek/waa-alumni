@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface StudentService {
 
-    Student findByUsername(String username);
+    StudentResponseDto findByUsername(String username);
     List<StudentResponseDto> findAll();
 
     Student findById(int id);

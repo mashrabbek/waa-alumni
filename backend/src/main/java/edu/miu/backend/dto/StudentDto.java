@@ -14,7 +14,7 @@ import javax.persistence.Column;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentDto {
-    String username;
+    private String username;
     private String address;
     private Integer majorId;
     private Float gpa;
