@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.miu.backend.dto.AddressDto;
 import edu.miu.backend.dto.StudentDto;
-import edu.miu.backend.dto.StudentResponseDto;
+import edu.miu.backend.dto.responseDto.StudentResponseDto;
 import edu.miu.backend.entity.Address;
 import edu.miu.backend.entity.Department;
 import edu.miu.backend.entity.Student;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;

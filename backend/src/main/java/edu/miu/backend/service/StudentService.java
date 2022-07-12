@@ -1,10 +1,9 @@
 package edu.miu.backend.service;
 
 import edu.miu.backend.dto.StudentDto;
-import edu.miu.backend.dto.StudentResponseDto;
+import edu.miu.backend.dto.responseDto.StudentResponseDto;
 import edu.miu.backend.entity.Student;
 
-import javax.transaction.Transactional;
 import java.sql.SQLException;
 import java.util.List;
 

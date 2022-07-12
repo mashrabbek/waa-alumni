@@ -1,4 +1,4 @@
-package edu.miu.backend.dto;
+package edu.miu.backend.dto.responseDto;
 
 import edu.miu.backend.entity.Tag;
 import lombok.AllArgsConstructor;
