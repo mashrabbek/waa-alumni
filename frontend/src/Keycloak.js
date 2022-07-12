@@ -1,12 +1,13 @@
 import Keycloak from "keycloak-js";
 
 const keycloak = new Keycloak({
-  url: "http://localhost:8081/",
+  url: "http://localhost:8081",
   realm: "waa",
-  clientId: "reactu",
-  "ssl-required": "external",
-  "public-client": true,
-  "confidential-port": 0,
+  clientId: "react-auth",
+  "enable-cors": true,
+  // "ssl-required": "external",
+  // "public-client": true,
+  // "confidential-port": 0,
 });
 
 // keycloak

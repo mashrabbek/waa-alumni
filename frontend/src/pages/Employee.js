@@ -1,6 +1,6 @@
 import React from "react";
 import { useKeycloak } from "@react-keycloak/web";
-const Employee = () => {
+const Employee = ({ keycloak }) => {
   //const [keycloak, initialized] = useKeycloak();
 
   return (

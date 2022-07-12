@@ -28,12 +28,12 @@ const TopBar = ({ toggleSidebar }) => {
       <Button color="info" onClick={toggleSidebar}>
         <FontAwesomeIcon icon={faAlignLeft} />
       </Button>
-      <NavbarToggler onClick={toggleTopbar} />
-      <Collapse isOpen={topbarIsOpen} navbar>
-        <Nav className="ms-auto" navbar>
-          <Button onClick={() => keycloak.login()}>Logout</Button>
-        </Nav>
-      </Collapse>
+      {/* <NavbarToggler onClick={toggleTopbar} /> */}
+      {/* <Collapse isOpen={topbarIsOpen} navbar> */}
+      <Nav className="ms-auto" navbar>
+        <Button onClick={() => keycloak.logout()}>Logout</Button>
+      </Nav>
+      {/* </Collapse> */}
     </Navbar>
   );
 };

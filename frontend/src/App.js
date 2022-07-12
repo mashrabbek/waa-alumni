@@ -1,5 +1,7 @@
 import logo from "./logo.svg";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "antd/dist/antd.css";
+
 import "./App.css";
 import React, { StrictMode } from "react";
 import { AppRouter } from "./containers/AppRouter";
@@ -10,16 +12,16 @@ import HomePage from "./pages/Home";
 function App() {
   return (
     <div>
-    <ReactKeycloakProvider
-    initOptions={{ onLoad: 'login-required',
-    promiseType: "native", }}
-    authClient={keycloak}>
-       <div className="App wrapper"><AppRouter></AppRouter>
-       </div>
-   </ReactKeycloakProvider>
-   </div>
+      <ReactKeycloakProvider
+        initOptions={{ onLoad: "login-required", promiseType: "native" }}
+        authClient={keycloak}
+      >
+        <div className="App wrapper">
+          <AppRouter></AppRouter>
+        </div>
+      </ReactKeycloakProvider>
+    </div>
   );
 }
-
 
 export default App;

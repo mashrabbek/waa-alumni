@@ -15,26 +15,26 @@ import Employee from "../pages/Employee";
 //import { withKeycloak } from "@react-keycloak/web";
 
 const PageRoutes = () => {
-  // const { keycloak, initialized } = useKeycloak();
-  // if (!initialized) {
-  //   return <h3>Loading ... !!!</h3>;
-  // }
+  const { keycloak, initialized } = useKeycloak();
+  if (!initialized) {
+    return <h3>Loading ... !!!</h3>;
+  }
   return (
     <>
       {/* <Menu keycloak={keycloak} keycloakInitialized={initialized} /> */}
-        <Routes>
-          <Route exact path="/" component={HomePage} />
-          <Route path="/" component={Profile} />
-          <Route path="/" component={Student} />
-          <Route path="/" component={Advertisement} />
-          <Route path="/" component={Employee} />
-          <Route path="/" component={Chat} />
-          {/* <PrivateRoute
+      <Routes>
+        <Route path="/" element={<HomePage keycloak={keycloak}></HomePage>} />
+        <Route path="/profile" element={<Profile keycloak={keycloak} />} />
+        <Route path="/students" element={<Student keycloak={keycloak} />} />
+        <Route path="/ads" element={<Advertisement keycloak={keycloak} />} />
+        <Route path="/employees" element={<Employee keycloak={keycloak} />} />
+        <Route path="/chat" element={<Chat keycloak={keycloak} />} />
+        {/* <PrivateRoute
             roles={["RealmAdmin"]}
             path="/protected"
             component={ProtectedPage}
           /> */}
-        </Routes>
+      </Routes>
     </>
   );
 };

@@ -1,9 +1,5 @@
 import React from "react";
-import { useKeycloak } from "@react-keycloak/web";
-
-const Student = () => {
-  // const [keycloak, initialized] = useKeycloak();
-
+const Student = ({ keycloak }) => {
   return (
     <div>
       <h1>Student Page</h1>
