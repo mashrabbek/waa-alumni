@@ -12,6 +12,7 @@ import { Button, Space, Table } from "antd";
 import AddJob from "../components/AddJob";
 import EditJob from "../components/EditJob";
 import jsonwebtoken from "jsonwebtoken";
+import ViewJobApps from "../components/ViewJobApps";
 
 // const data = [
 //   {
@@ -50,6 +51,7 @@ const Advertisement = ({ keycloak }) => {
           },
         }
       );
+      // [{ username, cv }]
       console.log({ data: res.data });
       if (res.data) {
         setAdData(res.data);
@@ -68,6 +70,31 @@ const Advertisement = ({ keycloak }) => {
     console.log("Various parameters", pagination, filters, sorter);
     setFilteredInfo(filters);
     setSortedInfo(sorter);
+  };
+  const onJobApply = async (jobAd) => {
+    console.log(jobAd);
+    let data = {
+      jobAdId: jobAd.id,
+      studentUsername: token.preferred_username,
+    };
+    console.log(data);
+    try {
+      let res = await axios.post(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/jobApplication`,
+        data,
+        {
+          headers: {
+            // Authorization: `Bearer ${keycloak.token}`
+          },
+        }
+      );
+      console.log({ data: res.data });
+      // if (res.data) {
+      //   // setAdData(res.data);
+      // }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const columns = [
@@ -168,10 +195,10 @@ const Advertisement = ({ keycloak }) => {
       title: "Action:",
       render: (_, ad) => {
         return (
-          // <Button className="btn btn-primary add-btn">
-          //     Edit
-          // </Button>
-          <EditJob ad={ad} />
+          <>
+            <ViewJobApps ad={ad} />
+            <EditJob ad={ad} />
+          </>
         );
       },
     },
@@ -275,8 +302,15 @@ const Advertisement = ({ keycloak }) => {
     },
     {
       title: "Action:",
-      render: (id) => {
-        return <Button className="btn btn-primary add-btn">Apply</Button>;
+      render: (jobAd) => {
+        return (
+          <Button
+            className="btn btn-primary add-btn"
+            onClick={() => onJobApply(jobAd)}
+          >
+            Apply
+          </Button>
+        );
       },
     },
   ];
