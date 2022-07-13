@@ -23,10 +23,10 @@ public class FacultyController {
         return ResponseEntity.ok().body(facultyService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Faculty> getById(@PathVariable int id){
-        return ResponseEntity.ok().body(facultyService.findById(id));
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Faculty> getById(@PathVariable int id){
+//        return ResponseEntity.ok().body(facultyService.findById(id));
+//    }
 
     @GetMapping("/{username}")
     public ResponseEntity<FacultyDto> getByUsername(@PathVariable String username){

@@ -1,14 +1,14 @@
 package edu.miu.backend.service;
 
 import edu.miu.backend.dto.JobAdDto;
+import edu.miu.backend.dto.responseDto.JobAdResponseAppliedDto;
 import edu.miu.backend.dto.responseDto.JobAdResponseDto;
-import edu.miu.backend.entity.JobAd;
 
 import java.io.IOException;
 import java.util.List;
 
 public interface JobAdService {
-    List<JobAd> findAll();
+    List<JobAdResponseDto> findAll();
 
     JobAdDto findById(int id);
 
@@ -20,4 +20,12 @@ public interface JobAdService {
     JobAdDto update(JobAdDto jobAdDto, int id) throws Exception;
 
     List<JobAdResponseDto> findByUsername(String username);
+
+    List<JobAdResponseDto> findAllByUsernameExcluded(String username);
+
+    List<JobAdResponseAppliedDto> findByIdApplied(int id);
+
+    List<JobAdResponseDto> findTopAll();
+
+    List<JobAdResponseDto> findRecentAll();
 }

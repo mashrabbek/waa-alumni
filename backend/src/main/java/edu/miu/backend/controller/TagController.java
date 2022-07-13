@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RestController
@@ -16,6 +17,7 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping("")
+//    @RolesAllowed({"admin", "student", "faculty"})
     public ResponseEntity<List<TagDto>> getAll(){
         return ResponseEntity.ok().body(tagService.findAll());
     }
