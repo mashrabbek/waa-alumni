@@ -319,7 +319,7 @@ const Advertisement = ({ keycloak }) => {
     <div className="container">
       <div className="row">
         <div className="col-md-12 text-right">
-          <AddJob />
+          <AddJob keycloak={keycloak}/>
         </div>
         <div className="col-md-12">
           <h5>User</h5>
