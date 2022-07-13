@@ -19,7 +19,7 @@ public class JobHistoryController {
     private JobHistoryService jobHistoryService;
 
     @GetMapping("")
-    public ResponseEntity<List<JobHistoryDto>> getAll(){
+    public ResponseEntity<List<JobHistoryResponseDto>> getAll(){
         return ResponseEntity.ok().body(jobHistoryService.findAll());
     }
 

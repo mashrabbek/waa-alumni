@@ -58,6 +58,5 @@ public class LoggingAspect {
         fileHandler.setFormatter(simple);
 
         logger.addHandler(fileHandler);
-
     }
 }

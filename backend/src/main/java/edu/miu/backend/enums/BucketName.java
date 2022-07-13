@@ -7,6 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 @RequiredArgsConstructor
 @Getter
 public enum BucketName {
-    ALUMNI("waa-alumni");
+    ALUMNI("waa-alumni-bucket");
     private final String bucketName;
 }

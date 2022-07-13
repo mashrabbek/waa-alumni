@@ -58,13 +58,17 @@ public class StudentServiceImpl implements StudentService {
 
       StudentResponseDto studentDto = modelMapper.map(student.get(), StudentResponseDto.class);
       String address = null;
-        try {
-           address = objectMapper.writeValueAsString(modelMapper.map(student.get().getAddress(), AddressDto.class));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+      if (student.get().getAddress() != null) {
+          try {
+              address = objectMapper.writeValueAsString(modelMapper.map(student.get().getAddress(), AddressDto.class));
+          } catch (JsonProcessingException e) {
+              throw new RuntimeException(e);
+          }
+      }
         studentDto.setAddress(address);
-        studentDto.setMajorId(student.get().getMajor().getId());
+      if (student.get().getMajor() != null) {
+          studentDto.setMajorId(student.get().getMajor().getId());
+      }
         return studentDto;
     }
 
@@ -103,13 +107,14 @@ public class StudentServiceImpl implements StudentService {
             student.setCv(cvUrl);
         }
 
-//        String cvUrl = uploadFileToAWSAndGetUrl(studentDto.getFile());
-//        student.setCv(cvUrl);
         student.setDeleted(Boolean.FALSE);
         student.setAddress(modelMapper.map(address, Address.class));
 
-        StudentResponseDto studentResponseDto = modelMapper.map(studentRepo.save(student), StudentResponseDto.class);
-        studentResponseDto.setMajorId(student.getMajor().getId());
+        Student savedStudent = studentRepo.save(student);
+        StudentResponseDto studentResponseDto = modelMapper.map(savedStudent, StudentResponseDto.class);
+        if(student.getMajor() != null) {
+            studentResponseDto.setMajorId(savedStudent.getMajor().getId());
+        }
         return studentResponseDto;
     }
 
@@ -166,12 +171,12 @@ public class StudentServiceImpl implements StudentService {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
         String keyName = generateFileName(multipartFile);
-//        try {
-//            var result = amazonS3Client
-//                    .putObject(BucketName.ALUMNI.getBucketName(), keyName, multipartFile.getInputStream(), metadata);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            var result = amazonS3Client
+                    .putObject(BucketName.ALUMNI.getBucketName(), keyName, multipartFile.getInputStream(), metadata);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return AWS_URL.concat(keyName);
     }
 
