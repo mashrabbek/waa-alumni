@@ -63,11 +63,10 @@ public class JobApplicationImpl implements JobApplicationService {
 
         JobApplication jobApplication = modelMapper.map(jobApplicationDto, JobApplication.class);
         jobApplication.setJobAds(jobAd.get()); jobApplication.setStudent(student);
-//            boolean byJobAdsAndStudent = jobApplicationRepo.findByJobAdsAndStudent(jobAd.get(), student);
-//        System.out.println(byJobAdsAndStudent);
-//        if (){
-//            return null;
-//        }
+        Optional<JobApplication> jobAdsAndStudent = jobApplicationRepo.findByJobAdsAndStudent(jobAd.get(), student);
+        if (jobAdsAndStudent.isPresent()){
+            return null;
+        }
 
         JobApplicationDto savedJobApplicationDto = modelMapper.map(jobApplicationRepo.save(jobApplication), JobApplicationDto.class);
         savedJobApplicationDto.setJobAdId(jobAd.get().getId()); savedJobApplicationDto.setStudentUsername(student.getUsername());

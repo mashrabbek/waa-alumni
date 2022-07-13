@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface JobApplicationRepo extends CrudRepository<JobApplication, Integer> {
-    boolean findByJobAdsAndStudent(JobAd jobAd, Student student);
+    Optional<JobApplication> findByJobAdsAndStudent(JobAd jobAd, Student student);
 
     Optional<List<JobApplication>> findByJobAds(JobAd jobAd);
 
