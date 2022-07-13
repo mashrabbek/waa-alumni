@@ -1,50 +1,69 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Modal, Form, Input, Button, Select } from "antd";
+import axios from "axios";
 // import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 
 const { Option } = Select;
 const tag_array = [];
 
-for (let i = 10; i < 36; i++) {
-  tag_array.push(
-    <Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>
-  );
-}
+const EditJob = ({ ad }) => {
+  async function getTags() {
+    let res = await axios.get(`${process.env.REACT_APP_BACKEND_BASE_URL}/tag`, {
+      headers: {
+        //todo auth
+      },
+    });
+    console.log(res.data);
 
-const EditJob = (id) => {
-  console.log("--id---", id.props.id);
+    for (let ob of res.data) {
+      tag_array.push(<Option key={ob.id}>{ob.name}</Option>);
+    }
+  }
+
+  console.log({ ad });
   // const [id, setId] = useState(id.props.id);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = (e) => {
-    console.log(e)
+    console.log(e);
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {
-  };
+  const handleOk = () => {};
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
-  let historyInit = {
-    companyName: "",
-    reasonToLeave: "",
-    tags: [],
+  let adInit = {
+    description: ad.description,
+    benefits: ad.benefits,
+    tags: ad.tags,
   };
 
   const [size, setSize] = useState("middle");
-  const [jobHistory, setJobHistory] = useState(historyInit);
+  const [adJob, setAdJob] = useState(adInit);
 
-  const jobOnChangeSelect = (e) => {
-    setJobHistory({ ...jobHistory, tags: e });
+  const adChange = (e) => {
+    setAdJob({ ...adJob, [e.target.name]: e.target.value });
   };
+
+  const adChangeSelect = (e) => {
+    setAdJob({ ...adJob, tags: e });
+  };
+
+  useEffect(() => {
+    getTags();
+  }, []);
 
   return (
     <>
-      <Button className="btn btn-primary add-btn" type="primary" onClick={showModal}>
+      <Button
+        className="btn btn-primary add-btn"
+        type="primary"
+        onClick={showModal}
+      >
         Edit
       </Button>
       <Modal
@@ -58,52 +77,33 @@ const EditJob = (id) => {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           layout="horizontal"
-        //   onValuesChange={onFormLayoutChange}
         >
-          <div className="Auth-form-content">
-            <div className="form-group mt-3 text-left">
-              <label>Description:</label>
-              <input
-                type="text"
-                required
-                className="form-control mt-1"
-                placeholder="please input your description"
-              />
-            </div>
-            <div className="form-group mt-3 text-left">
-              <label>Benifit:</label>
-              <input
-                type="text"
-                required
-                className="form-control mt-1"
-                placeholder="please input your benifit"
-              />
-            </div>
-            <div className="form-group mt-3 text-left">
-              <label>Tags:</label>
-              <Select
-                mode="tags"
-                name="tags"
-                size={size}
-                placeholder="Please select tags"
-                defaultValue={["a10", "c12"]}
-                onChange={jobOnChangeSelect}
-                style={{
-                  width: "100%",
-                }}
-              >
-                {tag_array}
-              </Select>
-            </div>
-            <div className="form-group mt-3 text-left">
-              <label>file:</label>
-              <input
-                type="file"
-                multiple
-                className="form-control mt-1"
-              />
-            </div>
-          </div>
+          <Form.Item label="Description">
+            <Input
+              value={adJob.description}
+              name="description"
+              onChange={adChange}
+            />
+          </Form.Item>
+          <Form.Item label="Benefit">
+            <Input value={adJob.benefits} name="benefits" onChange={adChange} />
+          </Form.Item>
+
+          <Form.Item label="Tags">
+            <Select
+              mode="tags"
+              name="tags"
+              size={size}
+              placeholder="Please select"
+              defaultValue={adJob.tags}
+              onChange={adChangeSelect}
+              style={{
+                width: "100%",
+              }}
+            >
+              {tag_array}
+            </Select>
+          </Form.Item>
         </Form>
       </Modal>
     </>
