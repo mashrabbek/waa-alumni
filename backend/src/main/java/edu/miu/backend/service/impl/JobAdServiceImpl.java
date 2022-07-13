@@ -61,7 +61,7 @@ public class JobAdServiceImpl implements JobAdService {
     public JobAdResponseDto save(JobAdDto jobAdDto) throws IOException {
 
         JobAd jobAd = modelMapper.map(jobAdDto, JobAd.class);
-        User student = studentRepo.findById(jobAdDto.getCreatorId()).get();
+        User student = studentRepo.findByUsername(jobAdDto.getOwnerUsername()).get();
         jobAd.setCreator(student);
 
         var tagList = jobAdDto.getTagIds()
@@ -117,6 +117,13 @@ public class JobAdServiceImpl implements JobAdService {
         jobAd.setTags(tagList);
 
         return jobAdDto;
+    }
+
+    @Override
+    public List<JobAdResponseDto> findByUsername(String username) {
+        List<JobAd> jobAds = jobAdRepo.findByCreator(username);
+        return jobAds.stream()
+                .map(jobAd -> modelMapper.map(jobAd, JobAdResponseDto.class)).collect(Collectors.toList());
     }
 
     private String generateFileName(MultipartFile multiPart) {

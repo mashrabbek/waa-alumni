@@ -2,7 +2,6 @@ package edu.miu.backend.controller;
 
 import edu.miu.backend.dto.StudentDto;
 import edu.miu.backend.dto.responseDto.StudentResponseDto;
-import edu.miu.backend.entity.Student;
 import edu.miu.backend.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

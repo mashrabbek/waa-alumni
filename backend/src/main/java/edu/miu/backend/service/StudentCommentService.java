@@ -14,4 +14,6 @@ public interface StudentCommentService {
     void delete(int id);
 
     StudentCommentDto update(StudentCommentDto studentCommentDto, int id) throws Exception;
+
+    List<StudentCommentDto> findByUsername(String username);
 }

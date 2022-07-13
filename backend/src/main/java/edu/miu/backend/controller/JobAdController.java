@@ -23,9 +23,14 @@ public class JobAdController {
         return ResponseEntity.ok().body(jobAdService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<JobAdDto> getById(@PathVariable int id){
-        return ResponseEntity.ok().body(jobAdService.findById(id));
+//    @GetMapping("/{id}")
+//    public ResponseEntity<JobAdDto> getById(@PathVariable int id){
+//        return ResponseEntity.ok().body(jobAdService.findById(id));
+//    }
+
+    @GetMapping("/{username}")
+        public ResponseEntity<List<JobAdResponseDto>> getById(@PathVariable String username){
+        return ResponseEntity.ok().body(jobAdService.findByUsername(username));
     }
 
     @PostMapping(path = "")

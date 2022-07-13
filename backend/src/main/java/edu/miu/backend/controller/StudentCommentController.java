@@ -20,9 +20,14 @@ public class StudentCommentController {
         return ResponseEntity.ok().body(studentCommentService.findAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<StudentCommentDto> getById(@PathVariable int id){
         return ResponseEntity.ok().body(studentCommentService.findById(id));
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<List<StudentCommentDto>> getById(@PathVariable String username){
+        return ResponseEntity.ok().body(studentCommentService.findByUsername(username));
     }
 
     @PostMapping()
