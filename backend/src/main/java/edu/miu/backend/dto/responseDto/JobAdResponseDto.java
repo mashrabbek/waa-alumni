@@ -14,7 +14,7 @@ public class JobAdResponseDto {
     private Integer id;
     private String description;
     private String benefits;
-    private Integer creatorId;
-    private List<Tag> tags;
+    private String creatorUsername;
+    private List<String> tags;
     private List<String> files;
 }

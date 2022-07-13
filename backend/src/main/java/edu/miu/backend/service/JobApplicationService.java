@@ -15,4 +15,6 @@ public interface JobApplicationService {
     void delete(int id);
 
     JobApplicationDto update(JobApplicationDto jobApplicationDto, int id) throws Exception;
+
+    List<JobApplicationDto> findByUsername(String username);
 }

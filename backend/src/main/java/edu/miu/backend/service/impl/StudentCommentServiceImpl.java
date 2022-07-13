@@ -1,8 +1,10 @@
 package edu.miu.backend.service.impl;
 import edu.miu.backend.dto.StudentCommentDto;
+import edu.miu.backend.entity.Department;
 import edu.miu.backend.entity.Faculty;
 import edu.miu.backend.entity.Student;
 import edu.miu.backend.entity.StudentComment;
+import edu.miu.backend.repo.DepartmentRepo;
 import edu.miu.backend.repo.FacultyRepo;
 import edu.miu.backend.repo.StudentCommentRepo;
 import edu.miu.backend.repo.StudentRepo;
@@ -22,6 +24,7 @@ public class StudentCommentServiceImpl implements StudentCommentService {
     private final StudentCommentRepo studentCommentRepo;
     private final StudentRepo studentRepo;
     private final FacultyRepo facultyRepo;
+    private final DepartmentRepo departmentRepo;
     private final ModelMapper modelMapper;
 
     @Override
@@ -57,13 +60,19 @@ public class StudentCommentServiceImpl implements StudentCommentService {
     @Override
     public StudentCommentDto save(StudentCommentDto studentCommentDto) {
         Student student = studentRepo.findByUsername(studentCommentDto.getStudentUsername()).get();
-        Faculty faculty = facultyRepo.findByUsername(studentCommentDto.getFacultyUsername()).get();
+        Optional<Faculty> faculty = facultyRepo.findByUsername(studentCommentDto.getFacultyUsername());
+        if (!faculty.isPresent()){
+            Faculty newFaculty = new Faculty();
+            newFaculty.setDepartment(departmentRepo.findById(1).get());
+            newFaculty.setUsername(studentCommentDto.getFacultyUsername());
+            facultyRepo.save(newFaculty);
+        }
 
         StudentComment studentComment = modelMapper.map(studentCommentDto, StudentComment.class);
-        studentComment.setStudent(student); studentComment.setFaculty(faculty);
+        studentComment.setStudent(student); studentComment.setFaculty(faculty.get());
 
         var savedStudentCommentDto = modelMapper.map(studentCommentRepo.save(studentComment), StudentCommentDto.class);
-        savedStudentCommentDto.setStudentUsername(student.getUsername()); savedStudentCommentDto.setFacultyUsername(faculty.getUsername());
+        savedStudentCommentDto.setStudentUsername(student.getUsername()); savedStudentCommentDto.setFacultyUsername(faculty.get().getUsername());
         return savedStudentCommentDto;
     }
 

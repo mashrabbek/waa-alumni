@@ -75,7 +75,23 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<StudentResponseDto> findAll() {
         List<Student> students = (List<Student>) studentRepo.findAll() ;
-        return students.stream().map(student -> modelMapper.map(student, StudentResponseDto.class)).collect(Collectors.toList());
+        return students.
+                stream()
+                .map(student -> {
+                    StudentResponseDto studentResponseDto = modelMapper.map(student, StudentResponseDto.class);
+                    if (student.getAddress() != null) {
+                        try {
+                            studentResponseDto.setAddress(objectMapper.writeValueAsString(modelMapper.map(student.getAddress(), AddressDto.class)));
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    if (student.getMajor() != null) {
+                        studentResponseDto.setMajorId(student.getMajor().getId());
+                    }
+                    return studentResponseDto;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

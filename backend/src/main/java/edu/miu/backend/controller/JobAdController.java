@@ -1,6 +1,7 @@
 package edu.miu.backend.controller;
 
 import edu.miu.backend.dto.JobAdDto;
+import edu.miu.backend.dto.responseDto.JobAdResponseAppliedDto;
 import edu.miu.backend.dto.responseDto.JobAdResponseDto;
 import edu.miu.backend.entity.JobAd;
 import edu.miu.backend.service.JobAdService;
@@ -19,18 +20,33 @@ public class JobAdController {
     private final JobAdService jobAdService;
 
     @GetMapping("")
-    public ResponseEntity<List<JobAd>> getAll(){
+    public ResponseEntity<List<JobAdResponseDto>> getAll(){
         return ResponseEntity.ok().body(jobAdService.findAll());
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<JobAdDto> getById(@PathVariable int id){
-//        return ResponseEntity.ok().body(jobAdService.findById(id));
-//    }
+    @GetMapping("/top")
+    public ResponseEntity<List<JobAdResponseDto>> getTopAll(){
+        return ResponseEntity.ok().body(jobAdService.findTopAll());
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<List<JobAdResponseDto>> getRecentAll(){
+        return ResponseEntity.ok().body(jobAdService.findRecentAll());
+    }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<List<JobAdResponseAppliedDto>> getByIdApplied(@PathVariable int id){
+        return ResponseEntity.ok().body(jobAdService.findByIdApplied(id));
+    }
 
     @GetMapping("/{username}")
-        public ResponseEntity<List<JobAdResponseDto>> getById(@PathVariable String username){
+        public ResponseEntity<List<JobAdResponseDto>> getByUsername(@PathVariable String username){
         return ResponseEntity.ok().body(jobAdService.findByUsername(username));
+    }
+
+    @GetMapping("/all/{username}")
+    public ResponseEntity<List<JobAdResponseDto>> getByUsernameExcluded(@PathVariable String username){
+        return ResponseEntity.ok().body(jobAdService.findAllByUsernameExcluded(username));
     }
 
     @PostMapping(path = "")

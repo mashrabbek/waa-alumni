@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JobApplicationDto {
+    private Integer id;
     private Integer jobAdId;
-    private Integer studentId;
-    private MultipartFile[] files;
+    private String studentUsername;
 }
