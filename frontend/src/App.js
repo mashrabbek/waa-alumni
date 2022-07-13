@@ -1,6 +1,7 @@
 import logo from "./logo.svg";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/antd.css";
+import "./chat.css"
 
 import "./App.css";
 import React, { StrictMode } from "react";

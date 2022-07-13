@@ -158,7 +158,7 @@ const StudendForm = ({ keycloak }) => {
               name="state"
               placeholder="State"
               type="text"
-              value={addressDetails.state}
+              value={addressDetails&&addressDetails.state}
               onChange={handleAddressChange}
             />
             <Input
@@ -166,7 +166,7 @@ const StudendForm = ({ keycloak }) => {
               name="city"
               placeholder="City"
               type="text"
-              value={addressDetails.city}
+              value={addressDetails&&addressDetails.city}
               onChange={handleAddressChange}
             />
             <Input
@@ -174,7 +174,7 @@ const StudendForm = ({ keycloak }) => {
               name="zip"
               placeholder="Zip"
               type="number"
-              value={addressDetails.zip}
+              value={addressDetails&&addressDetails.zip}
               onChange={handleAddressChange}
             />
           </FormGroup>

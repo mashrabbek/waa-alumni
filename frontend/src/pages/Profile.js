@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Credential from "../components/Credential";
 import StudendForm from "../components/StudentForm";
 import { Container, Row, Col } from "reactstrap";
-import JobHistory from "../components/JobHistory";
 import { Space, Button, Typography } from "antd";
 import AddJobHistory from "../components/AddJobHistory";
 
@@ -27,8 +26,7 @@ const Profile = ({ keycloak }) => {
       <Row>
         <Col className="bg-light border jobHistoryTable">
           <Title level={2}>Job History</Title>
-          <AddJobHistory></AddJobHistory>
-          <JobHistory />
+          <AddJobHistory keycloak={keycloak}></AddJobHistory>
         </Col>
       </Row>
     </Container>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Button as Btn } from "antd";
 import { useKeycloak } from "@react-keycloak/web";
 import {
   Form,
@@ -25,6 +26,7 @@ const Credential = ({ keycloak }) => {
   // todo get form before loading
   //console.log("outside");
   useEffect(() => {
+    console.log(token);
     setUserCredentials({
       firstName: token.given_name,
       lastName: token.family_name,
@@ -54,6 +56,12 @@ const Credential = ({ keycloak }) => {
       // todo alert error
     }
   };
+
+
+  const handleKeycloakCredential = ()=>{
+     const url = `${process.env.REACT_APP_KEYCLOAK_PROFILE_URL}`;
+      window.open(url, '_blank');
+  }
 
   return (
     <div>
@@ -87,6 +95,14 @@ const Credential = ({ keycloak }) => {
 
           <Button onClick={handleSaveCredential}>Save</Button>
         </Form>
+
+        <Form>
+          <br></br>
+        <Btn type="primary" onClick={handleKeycloakCredential}>
+           Change Password/Two-Factor Authentication
+        </Btn>
+        </Form>
+
       </Container>
     </div>
   );

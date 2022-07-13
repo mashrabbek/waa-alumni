@@ -1,36 +1,169 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-import { Modal, Form, Input, Button, Select, DatePicker } from "antd";
-import moment from "moment";
+import { Modal, Form, Input, Button, Select, DatePicker, Space, Table, Tag } from "antd";
+import axios from "axios";
+import jsonwebtoken from "jsonwebtoken";
 
 const { Option } = Select;
 const tag_array = [];
 
-for (let i = 10; i < 36; i++) {
-  tag_array.push(
-    <Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>
-  );
-}
+let jobHistoryArray = []
 
 const { TextArea } = Input;
 
-const AddJobHistory = () => {
+const tableColumns = [
+  {
+    title: "id",
+    dataIndex: "id",
+    key: "id",
+  },
+  {
+    title: "Company name",
+    dataIndex: "companyName",
+    key: "companyName",
+  },
+  {
+    title: "Start date",
+    dataIndex: "startDate",
+    key: "startDate",
+  },
+  {
+    title: "End date",
+    dataIndex: "endDate",
+    key: "endDate",
+  },
+  {
+    title: "Reason to leave",
+    dataIndex: "reasonToLeave",
+    key: "reasonToLeave",
+  },
+  {
+    title: "Tags",
+    key: "tags",
+    dataIndex: "tags",
+    render: (_, { tags }) => (
+      <>
+        {tags.map((tag) => {
+          let color = tag.length > 5 ? "geekblue" : "green";
+
+          if (tag === "loser") {
+            color = "volcano";
+          }
+
+          return (
+            <Tag color={color} key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </>
+    ),
+  },
+  {
+    title: "Action",
+    key: "id",
+    dataIndex: "id",
+    render: (_, { id }) => (
+      <>
+        <Button danger onClick={()=> deleteHistory(id)} >Delete</Button>
+        
+      </>
+    )
+  },
+];
+
+
+
+function deleteHistory(id){
+  let res = axios.delete(
+    `${process.env.REACT_APP_BACKEND_BASE_URL}/history/` + id,
+    {
+      headers: {
+        //todo auth
+      },
+    }
+  );
+  console.log(res.data);
+}
+
+
+const setTableData = async () => {
+  try {
+    let res = await axios.get(
+      `${process.env.REACT_APP_BACKEND_BASE_URL}/history/`,
+      {
+        headers: {
+          "Content-Type": "application/json"
+        },
+      }
+    );
+    jobHistoryArray = res.data;
+    console.log(jobHistoryArray);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+setTableData();
+
+
+const AddJobHistory = ({ keycloak }) => {
+  let token = jsonwebtoken.decode(keycloak.token);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {
-    // setIsModalVisible(false);
+  async function getTags() {
+    let res = await axios.get(
+      `${process.env.REACT_APP_BACKEND_BASE_URL}/tag`,
+      {
+        headers: {
+          //todo auth
+        },
+      }
+    );
+    console.log(res.data);
+
+    for(let ob of res.data){
+      tag_array.push(<Option key={ob.id}>{ob.name}</Option>);
+    }
+    
+  }
+
+  useEffect(() => {
+    getTags();
+  }, []);
+
+  
+
+  const handleOk = async () => {
     let jsonForSending = {
       companyName: jobHistory.companyName,
       startDate: formatDate(historyDates.startDate),
       endDate: formatDate(historyDates.endDate),
       reasonToLeave: jobHistory.reasonToLeave,
-      tags: jobHistory.tags,
+      tagIds: jobHistory.tags,
     };
-    console.log(jsonForSending);
+    try {
+      let res = await axios.post(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/history/${token.preferred_username}`,
+        jsonForSending,
+        {
+          headers: {
+            // "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+            // Authorization: `Bearer  ${keycloak.token}`,
+          },
+        }
+      );
+      setTableData();
+      setIsModalVisible(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleCancel = () => {
@@ -137,7 +270,7 @@ const AddJobHistory = () => {
               name="tags"
               size={size}
               placeholder="Please select"
-              defaultValue={["a10", "c12"]}
+              defaultValue={[]}
               onChange={jobOnChangeSelect}
               style={{
                 width: "100%",
@@ -148,8 +281,13 @@ const AddJobHistory = () => {
           </Form.Item>
         </Form>
       </Modal>
+
+      <Table columns={tableColumns} dataSource={jobHistoryArray} />
     </>
   );
 };
+
+
+
 
 export default AddJobHistory;
