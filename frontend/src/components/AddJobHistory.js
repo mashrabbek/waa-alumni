@@ -11,11 +11,6 @@ const tag_array = [];
 const { TextArea } = Input;
 
 
-
-
-
-
-
 const AddJobHistory = ({ keycloak }) => {
 
   const tableColumns = [
