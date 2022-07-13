@@ -4,6 +4,21 @@
   align-items: stretch;
 }
 
+.add-btn{
+  font-size: 16px;
+  padding: 5px;
+  margin: 10px;
+  height: 40px;
+  width: 100px;
+  background: #12caf0;
+  color: #fff;
+  font-weight: bold;
+}
+
+.text-right{
+  text-align: right;
+}
+
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 body {
