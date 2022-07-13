@@ -28,6 +28,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "^2.1.3",
     "reactstrap": "^9.1.1",
+    "redux": "^4.2.0",
     "redux-thunk": "^2.4.1",
     "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",

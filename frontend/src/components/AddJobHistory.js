@@ -7,114 +7,113 @@ import jsonwebtoken from "jsonwebtoken";
 const { Option } = Select;
 const tag_array = [];
 
-let jobHistoryArray = []
 
 const { TextArea } = Input;
 
-const tableColumns = [
-  {
-    title: "id",
-    dataIndex: "id",
-    key: "id",
-  },
-  {
-    title: "Company name",
-    dataIndex: "companyName",
-    key: "companyName",
-  },
-  {
-    title: "Start date",
-    dataIndex: "startDate",
-    key: "startDate",
-  },
-  {
-    title: "End date",
-    dataIndex: "endDate",
-    key: "endDate",
-  },
-  {
-    title: "Reason to leave",
-    dataIndex: "reasonToLeave",
-    key: "reasonToLeave",
-  },
-  {
-    title: "Tags",
-    key: "tags",
-    dataIndex: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-
-          if (tag === "loser") {
-            color = "volcano";
-          }
-
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "Action",
-    key: "id",
-    dataIndex: "id",
-    render: (_, { id }) => (
-      <>
-        <Button danger onClick={()=> deleteHistory(id)} >Delete</Button>
-        
-      </>
-    )
-  },
-];
-
-
-
-function deleteHistory(id){
-  let res = axios.delete(
-    `${process.env.REACT_APP_BACKEND_BASE_URL}/history/` + id,
-    {
-      headers: {
-        //todo auth
-      },
-    }
-  );
-  console.log(res.data);
-}
-
-
-const setTableData = async () => {
-  try {
-    let res = await axios.get(
-      `${process.env.REACT_APP_BACKEND_BASE_URL}/history/`,
-      {
-        headers: {
-          "Content-Type": "application/json"
-        },
-      }
-    );
-    jobHistoryArray = res.data;
-    console.log(jobHistoryArray);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-setTableData();
-
 
 const AddJobHistory = ({ keycloak }) => {
+
+  const tableColumns = [
+    {
+      title: "id",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Company name",
+      dataIndex: "companyName",
+      key: "companyName",
+    },
+    {
+      title: "Start date",
+      dataIndex: "startDate",
+      key: "startDate",
+    },
+    {
+      title: "End date",
+      dataIndex: "endDate",
+      key: "endDate",
+    },
+    {
+      title: "Reason to leave",
+      dataIndex: "reasonToLeave",
+      key: "reasonToLeave",
+    },
+    {
+      title: "Tags",
+      key: "tags",
+      dataIndex: "tags",
+      render: (_, { tags }) => (
+        <>
+          {tags.map((tag) => {
+            let color = tag.length > 5 ? "geekblue" : "green";
+  
+            if (tag === "loser") {
+              color = "volcano";
+            }
+  
+            return (
+              <Tag color={color} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      ),
+    },
+    {
+      title: "Action",
+      key: "id",
+      dataIndex: "id",
+      render: (_, { id }) => (
+        <>
+          <Button danger onClick={()=> deleteHistory(id)} >Delete</Button>
+          
+        </>
+      )
+    },
+  ];
+
+
   let token = jsonwebtoken.decode(keycloak.token);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [jobHistoryArray, setJobHistoryArray] = useState([]);
 
   const showModal = () => {
     setIsModalVisible(true);
   };
+
+
+  const setTableData = async () => {
+    try {
+      let res = await axios.get(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/history/`,
+        {
+          headers: {
+            "Content-Type": "application/json"
+          },
+        }
+      );
+      if(res.data){
+        setJobHistoryArray(res.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function deleteHistory(id){
+    let res = await axios.delete(
+      `${process.env.REACT_APP_BACKEND_BASE_URL}/history/` + id,
+      {
+        headers: {
+          //todo auth
+        },
+      }
+    );
+    setTableData();
+  }
 
   async function getTags() {
     let res = await axios.get(
@@ -135,6 +134,7 @@ const AddJobHistory = ({ keycloak }) => {
 
   useEffect(() => {
     getTags();
+    setTableData();
   }, []);
 
   
@@ -286,8 +286,5 @@ const AddJobHistory = ({ keycloak }) => {
     </>
   );
 };
-
-
-
 
 export default AddJobHistory;
