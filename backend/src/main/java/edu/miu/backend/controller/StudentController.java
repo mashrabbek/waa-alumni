@@ -2,7 +2,6 @@ package edu.miu.backend.controller;
 
 import edu.miu.backend.dto.StudentDto;
 import edu.miu.backend.dto.responseDto.StudentResponseDto;
-import edu.miu.backend.entity.Student;
 import edu.miu.backend.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,17 +22,12 @@ public class StudentController {
         return ResponseEntity.ok().body(studentService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Student> getById(@PathVariable int id){
-        return ResponseEntity.ok().body(studentService.findById(id));
-    }
-
     @GetMapping("/{username}")
-    public ResponseEntity<Student> getByUsername(@PathVariable String username){
+    public ResponseEntity<StudentResponseDto> getByUsername(@PathVariable String username){
         return ResponseEntity.ok().body(studentService.findByUsername(username));
     }
 
-    @PostMapping()
+    @PostMapping("")
     public ResponseEntity<StudentResponseDto> addStudent(@ModelAttribute StudentDto studentDto) throws SQLException {
         return ResponseEntity.ok().body(studentService.save(studentDto));
     }

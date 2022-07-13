@@ -20,5 +20,5 @@ public class JobHistoryResponseDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
     private String reasonToLeave;
-    private List<Tag> tags;
+    private List<String> tags;
 }

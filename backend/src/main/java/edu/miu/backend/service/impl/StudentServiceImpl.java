@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -51,8 +52,24 @@ public class StudentServiceImpl implements StudentService {
     private String AWS_URL = String.format("https://%s.s3.amazonaws.com/", BucketName.ALUMNI.getBucketName());
 
     @Override
-    public Student findByUsername(String username) {
-        return studentRepo.findByUsername(username).orElse(null);
+    public StudentResponseDto findByUsername(String username) {
+      Optional<Student> student = studentRepo.findByUsername(username);
+      if (!student.isPresent()){ return null;}
+
+      StudentResponseDto studentDto = modelMapper.map(student.get(), StudentResponseDto.class);
+      String address = null;
+      if (student.get().getAddress() != null) {
+          try {
+              address = objectMapper.writeValueAsString(modelMapper.map(student.get().getAddress(), AddressDto.class));
+          } catch (JsonProcessingException e) {
+              throw new RuntimeException(e);
+          }
+      }
+        studentDto.setAddress(address);
+      if (student.get().getMajor() != null) {
+          studentDto.setMajorId(student.get().getMajor().getId());
+      }
+        return studentDto;
     }
 
     @Override
@@ -84,13 +101,20 @@ public class StudentServiceImpl implements StudentService {
             Department department = departmentRepo.findById(studentDto.getMajorId()).get();
             student.setMajor(department);
         }
-        String cvUrl = uploadFileToAWSAndGetUrl(studentDto.getFile());
-        student.setCv(cvUrl);
+
+        if (studentDto.getFile() != null) {
+            String cvUrl = uploadFileToAWSAndGetUrl(studentDto.getFile());
+            student.setCv(cvUrl);
+        }
+
         student.setDeleted(Boolean.FALSE);
         student.setAddress(modelMapper.map(address, Address.class));
 
-        StudentResponseDto studentResponseDto = modelMapper.map(studentRepo.save(student), StudentResponseDto.class);
-        studentResponseDto.setMajorId(student.getMajor().getId());
+        Student savedStudent = studentRepo.save(student);
+        StudentResponseDto studentResponseDto = modelMapper.map(savedStudent, StudentResponseDto.class);
+        if(student.getMajor() != null) {
+            studentResponseDto.setMajorId(savedStudent.getMajor().getId());
+        }
         return studentResponseDto;
     }
 
@@ -147,12 +171,12 @@ public class StudentServiceImpl implements StudentService {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
         String keyName = generateFileName(multipartFile);
-//        try {
-//            var result = amazonS3Client
-//                    .putObject(BucketName.ALUMNI.getBucketName(), keyName, multipartFile.getInputStream(), metadata);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            var result = amazonS3Client
+                    .putObject(BucketName.ALUMNI.getBucketName(), keyName, multipartFile.getInputStream(), metadata);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return AWS_URL.concat(keyName);
     }
 

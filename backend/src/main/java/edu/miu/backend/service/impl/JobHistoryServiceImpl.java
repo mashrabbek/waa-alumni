@@ -1,9 +1,12 @@
 package edu.miu.backend.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.miu.backend.dto.JobHistoryDto;
 import edu.miu.backend.dto.responseDto.JobHistoryResponseDto;
 import edu.miu.backend.entity.JobHistory;
 import edu.miu.backend.entity.Student;
+import edu.miu.backend.entity.Tag;
 import edu.miu.backend.repo.JobHistoryRepo;
 import edu.miu.backend.repo.StudentRepo;
 import edu.miu.backend.repo.TagRepo;
@@ -23,14 +26,28 @@ public class JobHistoryServiceImpl implements JobHistoryService {
 
     private final JobHistoryRepo jobHistoryRepo;
     private final StudentRepo studentRepo;
+    private final ObjectMapper objectMapper;
     private final TagRepo tagRepo;
     private final ModelMapper modelMapper;
 
-
     @Override
-    public List<JobHistoryDto> findAll() {
+    public List<JobHistoryResponseDto> findAll() {
         List<JobHistory> histories =  (List<JobHistory>) jobHistoryRepo.findAll();
-        return histories.stream().map(jobHistory -> modelMapper.map(jobHistory, JobHistoryDto.class)).collect(Collectors.toList());
+        List<JobHistoryResponseDto> collect = histories
+                .stream()
+                .map(jobHistory -> {
+                    JobHistoryResponseDto jobHistoryResponseDto = modelMapper.map(jobHistory, JobHistoryResponseDto.class);
+                        jobHistoryResponseDto.setTags(jobHistory.getTags().stream().map(tag -> {
+                            try {
+                                return objectMapper.writeValueAsString(tag.getName());
+                            } catch (JsonProcessingException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }).collect(Collectors.toList()));
+                    return jobHistoryResponseDto;
+                })
+                .collect(Collectors.toList());
+        return collect;
     }
 
     @Override
@@ -46,9 +63,6 @@ public class JobHistoryServiceImpl implements JobHistoryService {
     @Override
     public JobHistoryDto update(JobHistoryDto jobHistoryDto, String username) {
 //        TODO:
-//        jobHistory.setCompanyName(jobHistoryDto.getCompanyName());
-//        jobHistory.setReasonToLeave(jobHistoryDto.getReasonToLeave());
-//        jobHistory.setStartDate(jobHistoryDto.getStartDate());
         return null;
     }
 
@@ -81,7 +95,7 @@ public class JobHistoryServiceImpl implements JobHistoryService {
 
     @Override
     public List<JobHistoryResponseDto> findByUsername(String username) {
-        Student student = studentRepo.findByUsername(username).get();
+        Student student = studentRepo.findByUsername(username).orElse(null);
         return jobHistoryRepo.findByStudent(student).stream().map(jobHistory ->modelMapper.map(jobHistory, JobHistoryResponseDto.class)).collect(Collectors.toList());
     }
 }

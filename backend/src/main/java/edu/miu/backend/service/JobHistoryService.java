@@ -8,7 +8,7 @@ import edu.miu.backend.repo.JobHistoryRepo;
 import java.util.List;
 
 public interface JobHistoryService {
-    List<JobHistoryDto> findAll();
+    List<JobHistoryResponseDto> findAll();
 
     JobHistoryDto findById(int id);
 

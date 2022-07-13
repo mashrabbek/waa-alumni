@@ -14,7 +14,7 @@ public class JobAdDto {
     private Integer id;
     private String description;
     private String benefits;
-    private Integer creatorId;
+    private String ownerUsername;
     private List<Integer> tagIds;
     private MultipartFile[] files;
 }

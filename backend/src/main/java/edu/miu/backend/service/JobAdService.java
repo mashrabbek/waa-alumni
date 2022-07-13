@@ -18,4 +18,6 @@ public interface JobAdService {
     void delete(int id);
 
     JobAdDto update(JobAdDto jobAdDto, int id) throws Exception;
+
+    List<JobAdResponseDto> findByUsername(String username);
 }

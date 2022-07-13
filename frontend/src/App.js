@@ -8,19 +8,22 @@ import React, { StrictMode } from "react";
 import { AppRouter } from "./containers/AppRouter";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import keycloak from "./Keycloak";
-import HomePage from "./pages/Home";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
 function App() {
   return (
     <div>
-      <ReactKeycloakProvider
-        initOptions={{ onLoad: "login-required", promiseType: "native" }}
-        authClient={keycloak}
-      >
-        <div className="App wrapper">
-          <AppRouter></AppRouter>
-        </div>
-      </ReactKeycloakProvider>
+      <Provider store={store}>
+        <ReactKeycloakProvider
+          initOptions={{ onLoad: "login-required", promiseType: "native" }}
+          authClient={keycloak}
+        >
+          <div className="App wrapper">
+            <AppRouter></AppRouter>
+          </div>
+        </ReactKeycloakProvider>
+      </Provider>
     </div>
   );
 }
